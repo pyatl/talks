@@ -5,9 +5,9 @@ build a simple game during the talk.
 
 Resources in this directory
 ---------------------------
-Slideshow (OpenOffice format): Intro to PyGame.odp
-Images: Provided by Invent Your Own Game with Python "Dodger" tutorial.
-Sample code: part1.py, part2.py, part3.py, part4.py
+Slideshow (OpenOffice format): Intro to PyGame.odp  
+Images: Provided by Invent Your Own Game with Python "Dodger" tutorial.  
+Sample code: part1.py, part2.py, part3.py, part4.py  
 
 Each sample file goes along with the 4 parts of building the game described
 in the "Writing the Code" slides in the slideshow.
