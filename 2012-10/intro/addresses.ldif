@@ -1,0 +1,18 @@
+dn: mail=rockdj@cc.gatech.edu
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+objectclass: mozillaAbPersonObsolete
+mail: rockdj@cc.gatech.edu
+modifytimestamp: 0Z
+
+dn: mail=drocco@westga.edu
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+objectclass: mozillaAbPersonObsolete
+mail: drocco@westga.edu
+modifytimestamp: 0Z
+
