@@ -1,0 +1,11 @@
+To run the experiments:
+
+$ pip install flask cleaver sqlalchemy
+$ python after.py
+
+...and visit http://localhost:8080 in different browsers.
+
+To view the results:
+$ python report.py
+
+...and visit http://localhost:8081.
