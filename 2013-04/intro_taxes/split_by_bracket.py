@@ -3,7 +3,7 @@ from brackets import brackets
 
 def split_by_bracket(earnings, filing_status):
     result = []
-    remaining = earnings
+    already_taxed = 0
 
     for bracket in brackets:
         # pull out the max amount for this
@@ -11,10 +11,10 @@ def split_by_bracket(earnings, filing_status):
         bracket_amount = getattr(bracket, filing_status)
 
         if bracket_amount and earnings > bracket_amount:
-            remaining = earnings - bracket_amount
-            result.append((bracket_amount, bracket.tax_rate))
+            result.append((bracket_amount - already_taxed, bracket.tax_rate))
+            already_taxed = bracket_amount
         else:
-            result.append((remaining, bracket.tax_rate))
+            result.append((earnings - already_taxed, bracket.tax_rate))
             break
 
     return result
