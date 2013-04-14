@@ -1,0 +1,25 @@
+
+Great! Um... How do we do anything with this?
+---------------------------------------------
+
+To compute tax:
+
+- Need: Brackets, Earnings, Filing Status
+- Steps: 
+
+    1.  Split earnings into brackets
+    2.  Compute tax for each bracket
+    3.  Sum
+
+
+split_by_bracket
+----------------
+
+a.  start w/ lowest bracket
+b.  if earnings < bracket  
+        ->  tax is earnings * tax rate
+
+c.  else tax is 
+        tax for this bracket 
+        + tax on remaining earnings
+
