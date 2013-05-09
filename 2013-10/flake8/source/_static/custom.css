@@ -1,0 +1,32 @@
+.slides > article {
+    /* background-color: lightblue; */
+	color: #222222;
+}
+
+h2 {
+	bottom: 50px;
+}
+
+/* Use when the pre tag contents do not fit on the screen otherwise. */
+.small {
+	font-size: 70%;
+}
+
+/* Center block quotes vertically and horizontally. Based on
+   http://css-tricks.com/vertically-center-multi-lined-text/ 
+*/
+
+blockquote {
+	font-size: 130%;
+	display: table;
+	vertical-align: middle;
+	text-align: center;
+	height: 80%;
+	width: 80%;
+}
+
+blockquote div {
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
+}
