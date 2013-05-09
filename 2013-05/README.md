@@ -39,7 +39,7 @@ for years.
 
 References
 ----------
-- Python threading module: http://docs.python.org/2/library/threading.html
-- PMOTW threading: http://pymotw.com/2/threading/
-- Queue module: http://docs.python.org/2/library/queue.html
+* Python threading module: http://docs.python.org/2/library/threading.html
+* PMOTW threading: http://pymotw.com/2/threading/
+* Queue module: http://docs.python.org/2/library/queue.html
 
