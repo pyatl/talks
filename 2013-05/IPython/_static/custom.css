@@ -1,0 +1,49 @@
+#ipython-changes-everything {
+	padding-left: 0;
+}
+
+#ipython-changes-everything h1 {
+	padding: 20px 0 20px 60px;
+	background-color: rgba(200, 200, 200, 0.7);
+	font-size: 3em;
+	line-height: 0.85;
+}
+
+#ipython-changes-everything th.field-name {
+	display: none;
+}
+
+#ipython-changes-everything td {
+	padding-left: 60px;
+}
+
+.slides > article {
+	border: none;
+	box-shadow: none;
+	font: 44px/50px'LeagueGothicRegular', Arial, sans-serif;
+}
+
+.slide > h1,h2 {
+	font: 60px/68px 'LeagueGothicRegular', Arial, sans-serif;
+}
+
+.slide > h2 {
+	bottom: 0px;
+	left: 0px;
+	background-color: rgba(0,0,0, 0.1);
+	padding: 10px 40px;
+}
+
+ul li::before {
+	content: none;
+}
+
+.drop {
+	position: relative;
+	top: 0.25em;
+	left: -0.125em;
+}
+
+div.sidebar {
+	font-size: 0.7em;
+}

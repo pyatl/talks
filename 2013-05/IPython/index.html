@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>IPython Changes Everything &mdash; IPython Changes Everything 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/styles.css" type="text/css" />
+    <link rel="stylesheet" href="_static/league.css" type="text/css" />
+    
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
+
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/common.js"></script>
+    <script type="text/javascript" src="_static/slides.js"></script>
+    <script type="text/javascript" src="_static/sync.js"></script>
+    <script type="text/javascript" src="_static/controller.js"></script>
+    <script type="text/javascript" src="_static/init.js"></script>
+    <link rel="top" title="IPython Changes Everything 0.1 documentation" href="#" /> 
+  </head>
+  <body>
+
+<section
+   id="slide_container"
+   class='slides layout-regular'>
+
+
+  <article class="slide level-1" id="ipython-changes-everything">
+<h1>IPython Changes Everything</h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Author:</th><td class="field-body"><div class="first last line-block">
+<div class="line">Daniel J. Rocco, Ph.D.</div>
+<div class="line">&#64;drocco007</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="figure">
+<img alt="_images/home.png" class="fill" src="_images/home.png" />
+</div>
+
+</article>
+<article class="slide level-2" id="ipython-killer-feature">
+<h2>IPython Killer Feature</h2>
+<p>Build and explore a live, dynamic object environment</p>
+<ul class="build simple">
+<li>low overhead</li>
+<li>explorable</li>
+<li>incremental</li>
+<li>repeatable</li>
+</ul>
+
+</article>
+<article class="slide level-2" id="background">
+<h2>Background</h2>
+<ul class="simple">
+<li>modern operating environment</li>
+<li>Python-specific characteristics</li>
+</ul>
+
+</article>
+<article class="slide level-2" id="use-the-source-luke">
+<h2>&quot;Use the source, Luke&quot;</h2>
+<blockquote>
+<div><p>Once […] it seemed everyone had the standard library source at their fingertips.
+I’m disappointed to report that it is becoming increasingly rare to look at another project’s source code, even among top-notch programmers.</p>
+<p class="attribution">&mdash;Raymond Hettinger</p>
+</div></blockquote>
+
+</article>
+<article class="slide level-2" id="why">
+<h2>Why?</h2>
+<p>source abstraction</p>
+<p>vs.</p>
+<p>Python tradition</p>
+
+</article>
+<article class="admonition-psst-this-is-your-transition-slide slide level-2">
+<h2>(psst.  this is your transition slide.)</h2>
+<p>(hint: talk about the whole &quot;what came in the box when you bought Python  thing…&quot;)</p>
+
+</article>
+<article class="slide level-2" id="what-s-all-the-quack-about-dynamic-typing">
+<h2>What's all the quack about dynamic typing?</h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">my_var</span> <span class="o">=</span> <span class="s">&#39;an amazing, fantastic value&#39;</span>
+<span class="n">my_var</span> <span class="o">=</span> <span class="mi">42</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p>Hey, whatever man, it's all good</p>
+<p class="attribution">&mdash;Python</p>
+</div></blockquote>
+
+</article>
+<article class="slide level-2" id="static-comparison">
+<h2>Static comparison</h2>
+<div class="highlight-java"><div class="highlight"><pre><span class="c1">// notice the required &quot;type declaration&quot;</span>
+<span class="n">String</span> <span class="n">my_var</span> <span class="o">=</span> <span class="s">&quot;an amazing, fantastic value&quot;</span><span class="o">;</span>
+
+<span class="c1">// &quot;This is NOT going to work&quot;</span>
+<span class="n">my_var</span> <span class="o">=</span> <span class="mi">42</span><span class="o">;</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p>Whoa! You can't do that!</p>
+<p class="attribution">&mdash;javac</p>
+</div></blockquote>
+<ul class="build simple">
+<li>&quot;Why didn't you say so before?&quot;</li>
+<li>&quot;I DID say so before!&quot;</li>
+</ul>
+
+</article>
+<article class="slide level-2" id="counterpoint">
+<h2>Counter<span class="drop">point</span></h2>
+<div class="sidebar">
+<p class="first sidebar-title">Tuple trouble</p>
+<p>Remember trailing comma → inadvertent tuple example from last month?</p>
+<dl class="last docutils">
+<dt>Python</dt>
+<dd><strong>type error</strong>: syntactically legal program that fails when run due to the mismatch between the expected and supplied types.</dd>
+<dt>Java</dt>
+<dd><strong>syntactically</strong> illegal.</dd>
+</dl>
+</div>
+<ul class="simple">
+<li>enables sloppiness</li>
+<li>no compile-time type checking</li>
+<li>can't determine the expected type of parameters/return values</li>
+<li>don't (reliably) know the dynamic type of an object</li>
+</ul>
+
+</article>
+<article class="slide level-2" id="python-s-perspective">
+<h2>Python's perspective</h2>
+<ul>
+<li><p class="first">practice good hygiene</p>
+<p>(e.g. don't gratuitously change a variable's type)</p>
+</li>
+<li><p class="first">favor protocols over inheritance</p>
+</li>
+<li><p class="first">quacking bird equals duck</p>
+</li>
+<li><p class="first">testing FTW!</p>
+</li>
+</ul>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><sub>(OMG why does it take him so long to get to the point?!)</sub></div>
+</div>
+
+</article>
+<article class="slide level-2" id="to-sum-up">
+<h2>To sum up</h2>
+<div class="line-block">
+<div class="line">+ flexibility</div>
+<div class="line">- do I know you?</div>
+</div>
+
+</article>
+<article class="slide level-2" id="def-ipython">
+<h2><tt class="docutils literal"><span class="pre">def</span> <span class="pre">ipython</span></tt></h2>
+
+</article>
+<article class="slide level-2" id="in-out">
+<h2>In &amp; out</h2>
+<dl class="docutils">
+<dt>what</dt>
+<dd>IPython's prompts are an <em>in/out dict pair</em> (integer keys)</dd>
+<dt>why it matters: <strong>exploration</strong></dt>
+<dd><ul class="first last simple">
+<li>make calls, get objects back</li>
+<li>don't have to know in advance what's interesting</li>
+</ul>
+</dd>
+</dl>
+<hr class="docutils" />
+<img alt="_images/prompt.png" class="align-center" src="_images/prompt.png" />
+
+</article>
+<article class="slide level-2" id="exploration-of-space">
+<h2>Exploration of Space</h2>
+<dl class="docutils">
+<dt>what</dt>
+<dd><p class="first">IPython supports tab completion… almost everywhere</p>
+<blockquote class="last">
+<div><ul class="simple">
+<li>locals</li>
+<li>object attributes</li>
+<li>filenames (!)</li>
+</ul>
+</div></blockquote>
+</dd>
+</dl>
+<p>why it matters: <strong>query object properties</strong>, name completion</p>
+
+</article>
+<article class="slide level-2" id="search">
+<h2>Search</h2>
+<dl class="docutils">
+<dt>what</dt>
+<dd><p class="first">wildcard search:</p>
+<div class="last highlight-python"><pre>?dict.*key*</pre>
+</div>
+</dd>
+</dl>
+
+</article>
+<article class="slide level-2" id="locate-the-source">
+<h2>Locate the Source</h2>
+<div class="highlight-python"><pre>module?</pre>
+</div>
+<img alt="_images/module_path.png" class="align-center" src="_images/module_path.png" />
+
+</article>
+<article class="slide level-2" id="view-the-source">
+<h2>View the source</h2>
+<div class="highlight-python"><pre>module??</pre>
+</div>
+<img alt="_images/module_source.png" class="align-center" src="_images/module_source.png" />
+<ul class="simple">
+<li>with paging and highlighting!</li>
+<li>works with classes &amp; functions too!</li>
+</ul>
+
+</article>
+<article class="slide level-2" id="cross-session-history">
+<h2>Cross-session history</h2>
+<dl class="docutils">
+<dt>what</dt>
+<dd><ul class="first last">
+<li><p class="first">do stuff</p>
+</li>
+<li><p class="first">exit</p>
+</li>
+<li><p class="first">come back</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">In</span> <span class="pre">[1]:</span> <span class="pre">%hist</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">&lt;Ctrl-r&gt;</span></tt> for interactive search</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</dd>
+</dl>
+
+</article>
+<article class="slide level-2" id="interact-with-the-environment">
+<h2>Interact with the environment</h2>
+<div class="highlight-python"><pre>ls
+!vi ~/some_file.txt</pre>
+</div>
+
+</article>
+<article class="slide level-2" id="repeatable-incremental-exploration">
+<h2>Repeatable, incremental exploration</h2>
+<dl class="docutils">
+<dt>what</dt>
+<dd><p class="first"><tt class="docutils literal"><span class="pre">%run</span> <span class="pre">file</span></tt> runs a file of Python statements</p>
+<p class="last"><tt class="docutils literal"><span class="pre">%edit</span></tt> same but edit first</p>
+</dd>
+<dt>why it matters</dt>
+<dd><ul class="first last simple">
+<li>incrementally build up a namespace</li>
+<li>quickly experiment</li>
+<li>return later &amp; reuse</li>
+</ul>
+</dd>
+</dl>
+
+</article>
+<article class="slide level-2" id="ipython">
+<h2>IPython</h2>
+<ul class="simple">
+<li>powerful tools</li>
+<li>overcome environmental challenges</li>
+<li>explore &amp; experiment in a live environment</li>
+</ul>
+
+</article>
+<article class="slide level-2" id="questions">
+<h2>questions?</h2>
+
+</article>
+
+
+</section>
+  </body>
+</html>
