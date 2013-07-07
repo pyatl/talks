@@ -1,0 +1,13 @@
+.slides > article {
+    /* background-color: lightblue; */
+	color: #222222;
+}
+
+h2 {
+	bottom: 50px;
+}
+
+/* Use when the pre tag contents do not fit on the screen otherwise. */
+.small {
+	font-size: 70%;
+}

@@ -1,0 +1,64 @@
+$ virtualenv -v foo
+Creating foo/lib/python2.7
+Symlinking Python bootstrap modules
+  Symlinking foo/lib/python2.7/config
+  Symlinking foo/lib/python2.7/lib-dynload
+  Symlinking foo/lib/python2.7/os.py
+  Ignoring built-in bootstrap module: posix
+  Symlinking foo/lib/python2.7/posixpath.py
+  Cannot import bootstrap module: nt
+  Symlinking foo/lib/python2.7/ntpath.py
+  Symlinking foo/lib/python2.7/genericpath.py
+  Symlinking foo/lib/python2.7/fnmatch.py
+  Symlinking foo/lib/python2.7/locale.py
+  Symlinking foo/lib/python2.7/encodings
+  Symlinking foo/lib/python2.7/codecs.py
+  Symlinking foo/lib/python2.7/stat.py
+  Symlinking foo/lib/python2.7/UserDict.py
+  Symlinking foo/lib/python2.7/copy_reg.py
+  Symlinking foo/lib/python2.7/types.py
+  Symlinking foo/lib/python2.7/re.py
+  Symlinking foo/lib/python2.7/sre.py
+  Symlinking foo/lib/python2.7/sre_parse.py
+  Symlinking foo/lib/python2.7/sre_constants.py
+  Symlinking foo/lib/python2.7/sre_compile.py
+  Symlinking foo/lib/python2.7/warnings.py
+  Symlinking foo/lib/python2.7/linecache.py
+  Symlinking foo/lib/python2.7/_abcoll.py
+  Symlinking foo/lib/python2.7/abc.py
+  Symlinking foo/lib/python2.7/_weakrefset.py
+Creating foo/lib/python2.7/site-packages
+Writing foo/lib/python2.7/site.py
+Writing foo/lib/python2.7/orig-prefix.txt
+Writing foo/lib/python2.7/no-global-site-packages.txt
+Creating parent directories for foo/include
+Symlinking foo/include/python2.7
+Creating foo/bin
+New python executable in foo/bin/python
+Changed mode of foo/bin/python to 0755
+Symlinking foo/.Python
+Testing executable with foo/bin/python -c "import sys;out=sys.stdout;getattr(out, "buffer", out).write(sys.prefix.encode("utf-8"))"
+Got sys.prefix result: u'/Users/dhellmann/Documents/2013/Presentations/virtualenv/foo'
+Creating foo/lib/python2.7/distutils
+Writing foo/lib/python2.7/distutils/__init__.py
+Writing foo/lib/python2.7/distutils/distutils.cfg
+Using existing setuptools egg: /Users/dhellmann/Library/Python/2.7/lib/python/site-packages/virtualenv_support/setuptools-0.6c11-py2.7.egg
+Installing setuptools..........
+  Processing dependencies for setuptools==0.6c11
+  Finished processing dependencies for setuptools==0.6c11
+...Installing setuptools...done.
+Installing existing pip-1.3.1.tar.gz distribution: /Users/dhellmann/Library/Python/2.7/lib/python/site-packages/virtualenv_support/pip-1.3.1.tar.gz
+Installing pip...
+  Processing pip-1.3.1.tar.gz
+  Running pip-1.3.1/setup.py -q bdist_egg --dist-dir /var/folders/5q/8gk0wq888xlggz008k8dr7180000hg/T/easy_install-Jsz3Pu/pip-1.3.1/egg-dist-tmp-3vXRNj
+  warning: no files found matching '*.html' under directory 'docs'
+  warning: no previously-included files matching '*.txt' found under directory 'docs/_build'
+  no previously-included directories found matching 'docs/_build/_sources'
+  Adding pip 1.3.1 to easy-install.pth file
+  Processing dependencies for pip==1.3.1
+  Finished processing dependencies for pip==1.3.1
+...Installing pip...done.
+Writing foo/bin/activate
+Writing foo/bin/activate.fish
+Writing foo/bin/activate_this.py
+Writing foo/bin/activate.csh
