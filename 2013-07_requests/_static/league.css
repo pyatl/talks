@@ -1,0 +1,20 @@
+@import url(slides.css);
+@import url(leaguegothic/stylesheet.css);
+
+::-webkit-scrollbar { 
+    display: none; 
+}
+
+body {
+	background: white;
+}
+
+.slides > article {
+	font: 60px/68px 'LeagueGothicRegular', Arial, sans-serif;
+	letter-spacing: 0;
+	-webkit-font-smoothing: antialiased;
+}
+
+h1, h2 {
+	font-weight: normal;
+}

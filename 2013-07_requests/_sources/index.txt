@@ -1,0 +1,244 @@
+==========================================
+PyATL July 2013
+==========================================
+
+* *Requesting Your Response*—Daniel Rocco
+* ``map()``—Cliff Kachinske (lightning)
+* *Starting EC2 instances with the Boto module and Python*—Bill Soukup
+* *Rate Limiting with Token Bucket*—Daniel Rocco
+
+.. image:: _static/atlanta.jpg
+    :class: fill
+
+
+HELLO?
+======
+
+
+Conversations on the Web
+========================
+
+* client (browser) sends request
+* server replies with response
+
+
+Acronym Soup
+============
+
+* HTML, the what
+* HTTP, the how
+
+
+HTML in 2 min.
+==============
+
+.. code-block:: html
+
+    <!doctype html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>A Page!</title>
+    </head>
+    <body>
+        <p>I'm a <em>paragraph</em>!</p>
+
+        <ul>
+            <li>I'm a</li>
+            <li>list!</li>
+        </ul>
+    </body>
+    </html>
+
+
+HTTP in 2 min.
+==============
+
+::
+
+    GET / HTTP/1.1
+    Host: weather.gov
+    Connection: close
+    User-Agent: Web-sniffer/1.0.46 (+http://web-sniffer.net/)
+    Accept-Encoding: gzip
+    Accept-Charset: ISO-8859-1,UTF-8;q=0.7,*;q=0.7
+    Cache-Control: no-cache
+    Accept-Language: de,en;q=0.7,en-us;q=0.3
+    Referer: http://web-sniffer.net/
+
+    <this space intentionally left blank>
+
+
+Instant Web Server
+==================
+
+* Just Add Python!
+
+    ::
+
+        $ python -m SimpleHTTPServer
+
+    `http://localhost:8000 <http://localhost:8000>`_
+
+.. image:: _static/pyweb.png
+    :align: center
+
+
+Tasks
+=====
+
+* get a page
+* extract something useful
+
+
+Requests
+========
+
+* new Python HTTP library
+* clean, powerful API
+* "make simple things simple, difficult things possible"
+
+
+Think Local
+===========
+
+::
+
+    In [33]: r = requests.get('http://localhost:8000')
+
+    In [34]: print r
+    <Response [200]>
+
+    In [35]: r.text[:100]
+    Out[35]: u'<!DOCTYPE html PUBLIC "-//W3C//DTD
+    HTML 3.2 Final//EN"><html>\n<title>Directory listing for /</title>'
+
+    In [36]: r.request
+    Out[36]: <PreparedRequest [GET]>
+
+
+Into the Soup
+=============
+
+::
+
+    In [38]: soup = BeautifulSoup(r.text)
+
+    In [39]: soup.find_all('a')
+    Out[39]:
+    [<a href=".htaccess">.htaccess</a>,
+     <a href=".idea/">.idea/</a>,
+     <a href=".svn/">.svn/</a>,
+     <a href="10101_cases.csv">10101_cases.csv</a>,
+     <a href="10101_cases.yaml">10101_cases.yaml</a>,
+     <a href="3911_cases.csv">3911_cases.csv</a>,
+     <a href="3911_cases.yaml">3911_cases.yaml</a>,
+
+
+
+Directories
+===========
+
+::
+
+    In [41]: soup.find_all(href=re.compile('/$'))
+    Out[41]:
+    [<a href=".idea/">.idea/</a>,
+     <a href=".svn/">.svn/</a>,
+     <a href="AddOns/">AddOns/</a>,
+     <a href="adex/">adex/</a>,
+     <a href="asppb/">asppb/</a>,
+     <a href="blue/">blue/</a>,
+     <a href="brighttrac/">brighttrac/</a>,
+
+
+
+How's the Weather?
+==================
+
+::
+
+    In [1]: import requests
+
+    In [2]: r = requests.get('http://www.weather.gov/')
+
+    In [4]: r.text[:1000]
+    Out[4]: u'\t<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0
+    Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-
+    transitional.dtd">\r\n<html xmlns="http://www.w3.
+    org/1999/xhtml">\r\n<head>\r\n<link rel="schema.DC"
+    href="http://purl.org/dc/elements/1.1/" /><title>NOAA
+    National Weather Service</title><meta name="DC.title"
+    content="NOAA National Weather Service" /><meta name="DC.
+    description" content="NOAA National Weather Service National
+    Weather Service" /><meta name="DC.creator" content="US
+    Department of Commerce, NOAA, National Weather Service" /><
+    meta name="DC.date.created" scheme="ISO8601" content="" /><meta name="DC.language" scheme="DCTERMS.RFC1766" content="EN-US" /><meta name="DC.keywords" content="weather, National Weather Service" /><meta name="DC.publisher" content="NOAA\'s National Weather Service" /><meta name="DC.contributor" content="National Weather Service" /><meta name="DC.rights" content="http://www.weather.gov/disclaimer.php"
+    /><meta name="rating" content="General" /><meta name="robo'
+
+Uh, what?  Oh, that's better
+============================
+
+::
+
+    In [9]: print soup.prettify()[:1000]
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml">
+     <head>
+      <link href="http://purl.org/dc/elements/1.1/" rel="schema.DC"/>
+      <title>
+       NOAA National Weather Service
+      </title>
+      <meta content="NOAA National Weather Service" name="DC.title"/>
+      <meta content="NOAA National Weather Service National Weather Service" name="DC.description"/>
+      <meta content="US Department of Commerce, NOAA, National Weather Service" name="DC.creator"/>
+      <meta content="" name="DC.date.created" scheme="ISO8601"/>
+
+
+The Form of Search
+==================
+
+::
+
+    In [15]: print soup.find('form',
+                        attrs={'id': 'getForecast'}).prettify()
+    <form action="http://forecast.weather.gov/zipcity.php" id="getForecast" method="get" name="getForecast">
+     <label for="inputstring">
+      Local forecast by
+      <br>
+       "City, St" or ZIP code
+      </br>
+     </label>
+     <input id="inputstring" name="inputstring"  ..."/>
+     <input id="btnSearch" name="btnSearch" ...
+
+
+Searching with Requests
+=======================
+
+::
+
+
+    In [17]: r = requests.post(
+        'http://forecast.weather.gov/zipcity.php',
+        data={'inputstring': 'Atlanta, GA'})
+
+    In [18]: soup = BeautifulSoup(r.text)
+
+    In [19]: print soup.find('p', 'myforecast-current').text
+    Mostly Cloudy
+
+    In [20]: print soup.find('p', 'myforecast-current-lrg').text
+    77°F
+
+
+Further Reading
+===============
+
+* `Screen Scraping with BeautifulSoup and lxml`_—Brandon Rhodes
+* `Requests documentation`_
+* `Beautiful Soup documentation`_
+
+.. _`Screen Scraping with BeautifulSoup and lxml`: http://rhodesmill.org/brandon/chapters/screen-scraping/
+.. _`Requests documentation`: http://docs.python-requests.org/en/latest/
+.. _`Beautiful Soup documentation`: http://www.crummy.com/software/BeautifulSoup/bs4/doc/

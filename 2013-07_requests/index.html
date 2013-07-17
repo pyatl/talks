@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>PyATL July 2013 &mdash; Rate Limiting with Token Bucket 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/styles.css" type="text/css" />
+    <link rel="stylesheet" href="_static/league.css" type="text/css" />
+    
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
+
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/common.js"></script>
+    <script type="text/javascript" src="_static/slides.js"></script>
+    <script type="text/javascript" src="_static/sync.js"></script>
+    <script type="text/javascript" src="_static/controller.js"></script>
+    <script type="text/javascript" src="_static/init.js"></script>
+    <link rel="top" title="Rate Limiting with Token Bucket 0.1 documentation" href="#" /> 
+  </head>
+  <body>
+
+<section
+   id="slide_container"
+   class='slides layout-regular'>
+
+
+  <article class="slide level-1" id="pyatl-july-2013">
+<h1>PyATL July 2013</h1>
+<ul class="simple">
+<li><em>Requesting Your Response</em>—Daniel Rocco</li>
+<li><tt class="docutils literal"><span class="pre">map()</span></tt>—Cliff Kachinske (lightning)</li>
+<li><em>Starting EC2 instances with the Boto module and Python</em>—Bill Soukup</li>
+<li><em>Rate Limiting with Token Bucket</em>—Daniel Rocco</li>
+</ul>
+<img alt="_images/atlanta.jpg" class="fill" src="_images/atlanta.jpg" />
+
+</article>
+<article class="slide level-2" id="hello">
+<h2>HELLO?</h2>
+
+</article>
+<article class="slide level-2" id="conversations-on-the-web">
+<h2>Conversations on the Web</h2>
+<ul class="simple">
+<li>client (browser) sends request</li>
+<li>server replies with response</li>
+</ul>
+
+</article>
+<article class="slide level-2" id="acronym-soup">
+<h2>Acronym Soup</h2>
+<ul class="simple">
+<li>HTML, the what</li>
+<li>HTTP, the how</li>
+</ul>
+
+</article>
+<article class="slide level-2" id="html-in-2-min">
+<h2>HTML in 2 min.</h2>
+<div class="highlight-html"><div class="highlight"><pre><span class="cp">&lt;!doctype html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">&quot;en&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">&quot;UTF-8&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;title&gt;</span>A Page!<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;p&gt;</span>I&#39;m a <span class="nt">&lt;em&gt;</span>paragraph<span class="nt">&lt;/em&gt;</span>!<span class="nt">&lt;/p&gt;</span>
+
+    <span class="nt">&lt;ul&gt;</span>
+        <span class="nt">&lt;li&gt;</span>I&#39;m a<span class="nt">&lt;/li&gt;</span>
+        <span class="nt">&lt;li&gt;</span>list!<span class="nt">&lt;/li&gt;</span>
+    <span class="nt">&lt;/ul&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+</div>
+
+</article>
+<article class="slide level-2" id="http-in-2-min">
+<h2>HTTP in 2 min.</h2>
+<div class="highlight-python"><pre>GET / HTTP/1.1
+Host: weather.gov
+Connection: close
+User-Agent: Web-sniffer/1.0.46 (+http://web-sniffer.net/)
+Accept-Encoding: gzip
+Accept-Charset: ISO-8859-1,UTF-8;q=0.7,*;q=0.7
+Cache-Control: no-cache
+Accept-Language: de,en;q=0.7,en-us;q=0.3
+Referer: http://web-sniffer.net/
+
+&lt;this space intentionally left blank&gt;</pre>
+</div>
+
+</article>
+<article class="slide level-2" id="instant-web-server">
+<h2>Instant Web Server</h2>
+<ul>
+<li><p class="first">Just Add Python!</p>
+<blockquote>
+<div><div class="highlight-python"><pre>$ python -m SimpleHTTPServer</pre>
+</div>
+<p><a class="reference external" href="http://localhost:8000">http://localhost:8000</a></p>
+</div></blockquote>
+</li>
+</ul>
+<img alt="_images/pyweb.png" class="align-center" src="_images/pyweb.png" />
+
+</article>
+<article class="slide level-2" id="tasks">
+<h2>Tasks</h2>
+<ul class="simple">
+<li>get a page</li>
+<li>extract something useful</li>
+</ul>
+
+</article>
+<article class="slide level-2" id="requests">
+<h2>Requests</h2>
+<ul class="simple">
+<li>new Python HTTP library</li>
+<li>clean, powerful API</li>
+<li>&quot;make simple things simple, difficult things possible&quot;</li>
+</ul>
+
+</article>
+<article class="slide level-2" id="think-local">
+<h2>Think Local</h2>
+<div class="highlight-python"><pre>In [33]: r = requests.get('http://localhost:8000')
+
+In [34]: print r
+&lt;Response [200]&gt;
+
+In [35]: r.text[:100]
+Out[35]: u'&lt;!DOCTYPE html PUBLIC "-//W3C//DTD
+HTML 3.2 Final//EN"&gt;&lt;html&gt;\n&lt;title&gt;Directory listing for /&lt;/title&gt;'
+
+In [36]: r.request
+Out[36]: &lt;PreparedRequest [GET]&gt;</pre>
+</div>
+
+</article>
+<article class="slide level-2" id="into-the-soup">
+<h2>Into the Soup</h2>
+<div class="highlight-python"><pre>In [38]: soup = BeautifulSoup(r.text)
+
+In [39]: soup.find_all('a')
+Out[39]:
+[&lt;a href=".htaccess"&gt;.htaccess&lt;/a&gt;,
+ &lt;a href=".idea/"&gt;.idea/&lt;/a&gt;,
+ &lt;a href=".svn/"&gt;.svn/&lt;/a&gt;,
+ &lt;a href="10101_cases.csv"&gt;10101_cases.csv&lt;/a&gt;,
+ &lt;a href="10101_cases.yaml"&gt;10101_cases.yaml&lt;/a&gt;,
+ &lt;a href="3911_cases.csv"&gt;3911_cases.csv&lt;/a&gt;,
+ &lt;a href="3911_cases.yaml"&gt;3911_cases.yaml&lt;/a&gt;,</pre>
+</div>
+
+</article>
+<article class="slide level-2" id="directories">
+<h2>Directories</h2>
+<div class="highlight-python"><pre>In [41]: soup.find_all(href=re.compile('/$'))
+Out[41]:
+[&lt;a href=".idea/"&gt;.idea/&lt;/a&gt;,
+ &lt;a href=".svn/"&gt;.svn/&lt;/a&gt;,
+ &lt;a href="AddOns/"&gt;AddOns/&lt;/a&gt;,
+ &lt;a href="adex/"&gt;adex/&lt;/a&gt;,
+ &lt;a href="asppb/"&gt;asppb/&lt;/a&gt;,
+ &lt;a href="blue/"&gt;blue/&lt;/a&gt;,
+ &lt;a href="brighttrac/"&gt;brighttrac/&lt;/a&gt;,</pre>
+</div>
+
+</article>
+<article class="slide level-2" id="how-s-the-weather">
+<h2>How's the Weather?</h2>
+<div class="highlight-python"><pre>In [1]: import requests
+
+In [2]: r = requests.get('http://www.weather.gov/')
+
+In [4]: r.text[:1000]
+Out[4]: u'\t&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0
+Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-
+transitional.dtd"&gt;\r\n&lt;html xmlns="http://www.w3.
+org/1999/xhtml"&gt;\r\n&lt;head&gt;\r\n&lt;link rel="schema.DC"
+href="http://purl.org/dc/elements/1.1/" /&gt;&lt;title&gt;NOAA
+National Weather Service&lt;/title&gt;&lt;meta name="DC.title"
+content="NOAA National Weather Service" /&gt;&lt;meta name="DC.
+description" content="NOAA National Weather Service National
+Weather Service" /&gt;&lt;meta name="DC.creator" content="US
+Department of Commerce, NOAA, National Weather Service" /&gt;&lt;
+meta name="DC.date.created" scheme="ISO8601" content="" /&gt;&lt;meta name="DC.language" scheme="DCTERMS.RFC1766" content="EN-US" /&gt;&lt;meta name="DC.keywords" content="weather, National Weather Service" /&gt;&lt;meta name="DC.publisher" content="NOAA\'s National Weather Service" /&gt;&lt;meta name="DC.contributor" content="National Weather Service" /&gt;&lt;meta name="DC.rights" content="http://www.weather.gov/disclaimer.php"
+/&gt;&lt;meta name="rating" content="General" /&gt;&lt;meta name="robo'</pre>
+</div>
+
+</article>
+<article class="slide level-2" id="uh-what-oh-that-s-better">
+<h2>Uh, what?  Oh, that's better</h2>
+<div class="highlight-python"><pre>In [9]: print soup.prettify()[:1000]
+&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
+&lt;html xmlns="http://www.w3.org/1999/xhtml"&gt;
+ &lt;head&gt;
+  &lt;link href="http://purl.org/dc/elements/1.1/" rel="schema.DC"/&gt;
+  &lt;title&gt;
+   NOAA National Weather Service
+  &lt;/title&gt;
+  &lt;meta content="NOAA National Weather Service" name="DC.title"/&gt;
+  &lt;meta content="NOAA National Weather Service National Weather Service" name="DC.description"/&gt;
+  &lt;meta content="US Department of Commerce, NOAA, National Weather Service" name="DC.creator"/&gt;
+  &lt;meta content="" name="DC.date.created" scheme="ISO8601"/&gt;</pre>
+</div>
+
+</article>
+<article class="slide level-2" id="the-form-of-search">
+<h2>The Form of Search</h2>
+<div class="highlight-python"><pre>In [15]: print soup.find('form',
+                    attrs={'id': 'getForecast'}).prettify()
+&lt;form action="http://forecast.weather.gov/zipcity.php" id="getForecast" method="get" name="getForecast"&gt;
+ &lt;label for="inputstring"&gt;
+  Local forecast by
+  &lt;br&gt;
+   "City, St" or ZIP code
+  &lt;/br&gt;
+ &lt;/label&gt;
+ &lt;input id="inputstring" name="inputstring"  ..."/&gt;
+ &lt;input id="btnSearch" name="btnSearch" ...</pre>
+</div>
+
+</article>
+<article class="slide level-2" id="searching-with-requests">
+<h2>Searching with Requests</h2>
+<div class="highlight-python"><pre>In [17]: r = requests.post(
+    'http://forecast.weather.gov/zipcity.php',
+    data={'inputstring': 'Atlanta, GA'})
+
+In [18]: soup = BeautifulSoup(r.text)
+
+In [19]: print soup.find('p', 'myforecast-current').text
+Mostly Cloudy
+
+In [20]: print soup.find('p', 'myforecast-current-lrg').text
+77°F</pre>
+</div>
+
+</article>
+<article class="slide level-2" id="further-reading">
+<h2>Further Reading</h2>
+<ul class="simple">
+<li><a class="reference external" href="http://rhodesmill.org/brandon/chapters/screen-scraping/">Screen Scraping with BeautifulSoup and lxml</a>—Brandon Rhodes</li>
+<li><a class="reference external" href="http://docs.python-requests.org/en/latest/">Requests documentation</a></li>
+<li><a class="reference external" href="http://www.crummy.com/software/BeautifulSoup/bs4/doc/">Beautiful Soup documentation</a></li>
+</ul>
+
+</article>
+
+
+</section>
+  </body>
+</html>
