@@ -1,0 +1,237 @@
+==========================================
+Rate Limiting Generators with Token Bucket
+==========================================
+
+:Author: | Daniel J. Rocco, Ph.D.
+         | @drocco007
+
+.. figure:: /_static/DSC_0107.jpg
+    :class: fill
+
+
+The setup
+=========
+
+.. rst-class:: build
+
+* ~450k user records
+* → JSON/HTTP POST, simple filtering & column selection
+* ← JSON/CSV
+
+
+(don't be) Naïve
+================
+
+.. code-block:: python
+
+    @expose('json')
+    def q(self, entity, **filter_criteria):
+        result_set = data_api.query(entity, **filter_criteria)
+        results = []
+
+        for row in result_set:
+            result = dict(row)
+            results.append(result)
+
+        return simplejson.dumps(results)
+
+
+Ugh
+===
+
+.. rst-class:: build
+
+* materializes entire result set in memory
+* TWICE!
+
+
+    .. code-block:: python
+
+        # even if you didn't make this call,
+        # your framework probably did
+        return simplejson.dumps(results)
+
+
+Double Ugh
+==========
+
+* where "memory" == virtual memory == disk
+* 450k × 1024b/rec. × 2 = 1GB
+
+
+What could possibly go wrong?
+=============================
+
+.. image:: _static/naive_run.png
+
+.. image:: _static/naive_htop.png
+
+
+hey, how'd you do that?
+=======================
+
+.. code-block:: python
+
+    results = []
+
+    for value in random_hex_strings(25 * 400000):
+        results.append(value)
+
+    results = json.dumps(results)
+
+    with open('/dev/null', 'wb') as f:
+        f.write(results)
+
+
+Generators to the rescue
+========================
+
+* bad design → bad performance
+* don't make TWO throwaway copies! OMG!
+* chances are your source is stream based/lazy evaluated already…
+
+
+Generating some performance
+===========================
+
+.. image:: _static/generator_run.png
+
+.. image:: _static/generator_htop.png
+
+
+.. code-block:: python
+
+    with open('/dev/null', 'wb') as f:
+        for value in json_stream(random_hex_strings(25 * 400000)):
+            f.write(value)
+
+
+Goal: limit the performance impact of the data API
+==================================================
+
+*  how?
+*  why py?
+
+
+Token Bucket: Simple, Generic Rate Limiting
+===========================================
+
+.. rst-class:: build
+
+* 0 ≤ tokens ≤ capacity
+* fill rate: how quickly used tokens are replenished
+
+    * ∴ maximum sustained bandwidth
+
+* consume tokens to send data
+
+
+Using a Token Bucket
+====================
+
+* determine parameters, e.g. 256KB/s:
+
+    | 1 token = 1 byte
+    | capacity = fill rate = 256k
+
+.. code-block:: python
+
+    for chunk in data:
+        bucket.consume(len(chunk))  # blocking
+        yield chunk
+
+
+To the limit
+============
+
+.. image:: _static/limited_run.png
+
+.. image:: _static/limited_htop.png
+
+
+.. code-block:: python
+
+    with open('/dev/null', 'wb') as f:
+        for value in rate_limit(..., _128k):
+            f.write(value)
+
+.. image:: _static/809_3_full.png
+    :class: the-cheat
+
+
+Implementation notes: tokens are lazily generated
+=================================================
+
+.. code-block:: python
+
+    @property
+    def tokens(self):
+        if self._tokens < self.capacity:
+            now = time()
+
+            delta = self.fill_rate *
+                    (now - self.timestamp)
+
+            self._tokens = min(self.capacity,
+                               self._tokens + delta)
+
+            self.timestamp = now
+        return self._tokens
+
+
+Implementation notes: blocking version
+=================================================
+
+.. code-block:: python
+
+    def consume(self, tokens, block=True):
+        ...
+
+        if block and tokens > self.tokens:
+            # how many tokens are we missing
+            deficit = tokens - self._tokens
+
+            # how long will it take to fill to that level
+            delay = deficit / self.fill_rate
+
+            # wait that long
+            sleep(delay)
+
+
+
+Implementation notes: not thread safe!
+======================================
+
+* Um. Is that a good idea?
+
+
+Flasks are fun
+==============
+
+.. image:: _static/flask_curl.png
+
+.. code-block:: python
+
+    from flask import Flask, Response
+    app = Flask(__name__)
+
+    @app.route('/')
+    def random_data():
+        generator = rate_limit(json_stream(
+                        random_hex_strings(25 * 400000)), _32k)
+        return Response(generator,  mimetype='application/json')
+
+    if __name__ == "__main__":
+        app.run(host='0.0.0.0', debug=True)
+
+
+
+Resources
+=========
+
+* `Original token bucket recipe`_  (Active State)
+* `rate limiter generator wrapper, blocking token bucket`_
+
+
+.. _`Original token bucket recipe`: http://code.activestate.com/recipes/511490-implementation-of-the-token-bucket-algorithm/?in=lang-python
+.. _`rate limiter generator wrapper, blocking token bucket`: https://gist.github.com/drocco-007/6155452

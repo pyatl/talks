@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Rate Limiting Generators with Token Bucket &mdash; Rate Limiting with Token Bucket 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/styles.css" type="text/css" />
+    <link rel="stylesheet" href="_static/league.css" type="text/css" />
+    
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
+
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/common.js"></script>
+    <script type="text/javascript" src="_static/slides.js"></script>
+    <script type="text/javascript" src="_static/sync.js"></script>
+    <script type="text/javascript" src="_static/controller.js"></script>
+    <script type="text/javascript" src="_static/init.js"></script>
+    <link rel="top" title="Rate Limiting with Token Bucket 0.1 documentation" href="#" /> 
+  </head>
+  <body>
+
+<section
+   id="slide_container"
+   class='slides layout-regular'>
+
+
+  <article class="slide level-1" id="rate-limiting-generators-with-token-bucket">
+<h1>Rate Limiting Generators with Token Bucket</h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Author:</th><td class="field-body"><div class="first last line-block">
+<div class="line">Daniel J. Rocco, Ph.D.</div>
+<div class="line">&#64;drocco007</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="figure">
+<img alt="_images/DSC_0107.jpg" class="fill" src="_images/DSC_0107.jpg" />
+</div>
+
+</article>
+<article class="slide level-2" id="the-setup">
+<h2>The setup</h2>
+<ul class="build simple">
+<li>~450k user records</li>
+<li>→ JSON/HTTP POST, simple filtering &amp; column selection</li>
+<li>← JSON/CSV</li>
+</ul>
+
+</article>
+<article class="slide level-2" id="don-t-be-naive">
+<h2>(don't be) Naïve</h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@expose</span><span class="p">(</span><span class="s">&#39;json&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">q</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">,</span> <span class="o">**</span><span class="n">filter_criteria</span><span class="p">):</span>
+    <span class="n">result_set</span> <span class="o">=</span> <span class="n">data_api</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">entity</span><span class="p">,</span> <span class="o">**</span><span class="n">filter_criteria</span><span class="p">)</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">result_set</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+        <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">simplejson</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+</pre></div>
+</div>
+
+</article>
+<article class="slide level-2" id="ugh">
+<h2>Ugh</h2>
+<ul class="build">
+<li><p class="first">materializes entire result set in memory</p>
+</li>
+<li><p class="first">TWICE!</p>
+<blockquote>
+<div><div class="highlight-python"><div class="highlight"><pre><span class="c"># even if you didn&#39;t make this call,</span>
+<span class="c"># your framework probably did</span>
+<span class="k">return</span> <span class="n">simplejson</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+
+</article>
+<article class="slide level-2" id="double-ugh">
+<h2>Double Ugh</h2>
+<ul class="simple">
+<li>where &quot;memory&quot; == virtual memory == disk</li>
+<li>450k × 1024b/rec. × 2 = 1GB</li>
+</ul>
+
+</article>
+<article class="slide level-2" id="what-could-possibly-go-wrong">
+<h2>What could possibly go wrong?</h2>
+<img alt="_images/naive_run.png" src="_images/naive_run.png" />
+<img alt="_images/naive_htop.png" src="_images/naive_htop.png" />
+
+</article>
+<article class="slide level-2" id="hey-how-d-you-do-that">
+<h2>hey, how'd you do that?</h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">random_hex_strings</span><span class="p">(</span><span class="mi">25</span> <span class="o">*</span> <span class="mi">400000</span><span class="p">):</span>
+    <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;/dev/null&#39;</span><span class="p">,</span> <span class="s">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+</pre></div>
+</div>
+
+</article>
+<article class="slide level-2" id="generators-to-the-rescue">
+<h2>Generators to the rescue</h2>
+<ul class="simple">
+<li>bad design → bad performance</li>
+<li>don't make TWO throwaway copies! OMG!</li>
+<li>chances are your source is stream based/lazy evaluated already…</li>
+</ul>
+
+</article>
+<article class="slide level-2" id="generating-some-performance">
+<h2>Generating some performance</h2>
+<img alt="_images/generator_run.png" src="_images/generator_run.png" />
+<img alt="_images/generator_htop.png" src="_images/generator_htop.png" />
+<div class="highlight-python"><div class="highlight"><pre><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;/dev/null&#39;</span><span class="p">,</span> <span class="s">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">json_stream</span><span class="p">(</span><span class="n">random_hex_strings</span><span class="p">(</span><span class="mi">25</span> <span class="o">*</span> <span class="mi">400000</span><span class="p">)):</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
+
+</article>
+<article class="slide level-2" id="goal-limit-the-performance-impact-of-the-data-api">
+<h2>Goal: limit the performance impact of the data API</h2>
+<ul class="simple">
+<li>how?</li>
+<li>why py?</li>
+</ul>
+
+</article>
+<article class="slide level-2" id="token-bucket-simple-generic-rate-limiting">
+<h2>Token Bucket: Simple, Generic Rate Limiting</h2>
+<ul class="build">
+<li><p class="first">0 ≤ tokens ≤ capacity</p>
+</li>
+<li><p class="first">fill rate: how quickly used tokens are replenished</p>
+<blockquote>
+<div><ul class="simple">
+<li>∴ maximum sustained bandwidth</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">consume tokens to send data</p>
+</li>
+</ul>
+
+</article>
+<article class="slide level-2" id="using-a-token-bucket">
+<h2>Using a Token Bucket</h2>
+<ul>
+<li><p class="first">determine parameters, e.g. 256KB/s:</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">1 token = 1 byte</div>
+<div class="line">capacity = fill rate = 256k</div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+    <span class="n">bucket</span><span class="o">.</span><span class="n">consume</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">chunk</span><span class="p">))</span>  <span class="c"># blocking</span>
+    <span class="k">yield</span> <span class="n">chunk</span>
+</pre></div>
+</div>
+
+</article>
+<article class="slide level-2" id="to-the-limit">
+<h2>To the limit</h2>
+<img alt="_images/limited_run.png" src="_images/limited_run.png" />
+<img alt="_images/limited_htop.png" src="_images/limited_htop.png" />
+<div class="highlight-python"><div class="highlight"><pre><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;/dev/null&#39;</span><span class="p">,</span> <span class="s">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">rate_limit</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">_128k</span><span class="p">):</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="_images/809_3_full.png" class="the-cheat" src="_images/809_3_full.png" />
+
+</article>
+<article class="slide level-2" id="implementation-notes-tokens-are-lazily-generated">
+<h2>Implementation notes: tokens are lazily generated</h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@property</span>
+<span class="k">def</span> <span class="nf">tokens</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tokens</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">capacity</span><span class="p">:</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+
+        <span class="n">delta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fill_rate</span> <span class="o">*</span>
+                <span class="p">(</span><span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tokens</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">capacity</span><span class="p">,</span>
+                           <span class="bp">self</span><span class="o">.</span><span class="n">_tokens</span> <span class="o">+</span> <span class="n">delta</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="n">now</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tokens</span>
+</pre></div>
+</div>
+
+</article>
+<article class="slide level-2" id="implementation-notes-blocking-version">
+<h2>Implementation notes: blocking version</h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">consume</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">block</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="o">...</span>
+
+    <span class="k">if</span> <span class="n">block</span> <span class="ow">and</span> <span class="n">tokens</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="p">:</span>
+        <span class="c"># how many tokens are we missing</span>
+        <span class="n">deficit</span> <span class="o">=</span> <span class="n">tokens</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tokens</span>
+
+        <span class="c"># how long will it take to fill to that level</span>
+        <span class="n">delay</span> <span class="o">=</span> <span class="n">deficit</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">fill_rate</span>
+
+        <span class="c"># wait that long</span>
+        <span class="n">sleep</span><span class="p">(</span><span class="n">delay</span><span class="p">)</span>
+</pre></div>
+</div>
+
+</article>
+<article class="slide level-2" id="implementation-notes-not-thread-safe">
+<h2>Implementation notes: not thread safe!</h2>
+<ul class="simple">
+<li>Um. Is that a good idea?</li>
+</ul>
+
+</article>
+<article class="slide level-2" id="flasks-are-fun">
+<h2>Flasks are fun</h2>
+<img alt="_images/flask_curl.png" src="_images/flask_curl.png" />
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">Response</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+<span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">random_data</span><span class="p">():</span>
+    <span class="n">generator</span> <span class="o">=</span> <span class="n">rate_limit</span><span class="p">(</span><span class="n">json_stream</span><span class="p">(</span>
+                    <span class="n">random_hex_strings</span><span class="p">(</span><span class="mi">25</span> <span class="o">*</span> <span class="mi">400000</span><span class="p">)),</span> <span class="n">_32k</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">generator</span><span class="p">,</span>  <span class="n">mimetype</span><span class="o">=</span><span class="s">&#39;application/json&#39;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+
+</article>
+<article class="slide level-2" id="resources">
+<h2>Resources</h2>
+<ul class="simple">
+<li><a class="reference external" href="http://code.activestate.com/recipes/511490-implementation-of-the-token-bucket-algorithm/?in=lang-python">Original token bucket recipe</a>  (Active State)</li>
+<li><a class="reference external" href="https://gist.github.com/drocco-007/6155452">rate limiter generator wrapper, blocking token bucket</a></li>
+</ul>
+
+</article>
+
+
+</section>
+  </body>
+</html>
