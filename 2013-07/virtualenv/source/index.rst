@@ -18,6 +18,14 @@ Different projects mean *different dependencies*.
 
 Changing dependencies == **Conflict**
 
+.. note::
+
+  Conflict can come from
+
+  - incompatible packages
+  - upgrading to a new version of something
+
+
 Options
 =======
 
@@ -45,6 +53,11 @@ Where ``import`` Looks for Modules
 2. ``PYTHONPATH`` environment variable
 3. **sys.prefix** + ``lib/python$VERSION/site-packages``
 4. **sys.exec_prefix** + ``lib/python$VERSION/site-packages``
+
+.. note::
+
+   To understand how virtualenv works, you need to understand Python's
+   ``import`` statement and how it finds packages.
 
 How virtualenv Works
 ====================
