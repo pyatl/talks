@@ -22,7 +22,7 @@ What are "Special Methods"?
 *Special Methods* are a naming convention to bind methods of your
 class to operators or built-ins in the language.
 
-Also known as "Dunder" methods.
+Also known as "Dunder" methods ("double underscore").
 
 .. note::
 
@@ -187,22 +187,22 @@ Rich Comparison Methods
 
 ``functools.total_ordering``
 
-Adding Sorting
-==============
+Default Sorting
+===============
 
 .. literalinclude:: unsorted.py
    :lines: 4-11
 
-Adding Sorting
-==============
+Default Sorting
+===============
 
 .. literalinclude:: unsorted.py
    :lines: 14-22
 
 *What will the output be?*
 
-Adding Sorting
-==============
+Default Sorting
+===============
 
 ::
 
@@ -215,7 +215,7 @@ Adding Sorting
 
 *Why?*
 
-Adding Sorting
+Custom Sorting
 ==============
 
 .. literalinclude:: sortable.py
@@ -227,7 +227,7 @@ Adding Sorting
   ``total_ordering`` adds the missing comparison operations based on
   the 2 given.
 
-Adding Sorting
+Custom Sorting
 ==============
 
 ::
@@ -251,4 +251,5 @@ Caveats
 References
 ==========
 
-- http://docs.python.org/2/reference/datamodel.html#specialnames
+- "Special Method Names"
+  http://docs.python.org/2/reference/datamodel.html#special-method-names
