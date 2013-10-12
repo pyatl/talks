@@ -1,0 +1,218 @@
+
+<!DOCTYPE html>
+
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Musing about Objects &mdash; Musing About Objects 2013.10.10 documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/styles.css" type="text/css" />
+    <link rel="stylesheet" href="_static/league.css" type="text/css" />
+    
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
+
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="top" title="Musing About Objects 2013.10.10 documentation" href="#" /> 
+  </head>
+  <body>
+
+<section
+   id="slide_container"
+   class='slides layout-regular'>
+
+
+  <article class="slide level-1" id="musing-about-objects">
+<h1>Musing about Objects</h1>
+<div class="line-block">
+<div class="line">Daniel J. Rocco, Ph.D.</div>
+<div class="line">&#64;drocco007</div>
+</div>
+<img alt="_images/circular_tree.png" class="fill" src="_images/circular_tree.png" />
+
+</article>
+<article class="slide level-1" id="objects">
+<h1>Objects</h1>
+<ul class="build simple">
+<li>know stuff</li>
+<li>do stuff</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>know: state, field values, collaborators</li>
+<li>do:  actions the object can carry out</li>
+<li>e.g. str: knows characters, length; does: contains, substitute, lower</li>
+</ul>
+</div>
+
+</article>
+<article class="slide level-2" id="no-object-is-an-island">
+<h2>No Object Is an Island</h2>
+<ul class="build simple">
+<li>object ecosystem</li>
+<li>OO S/W dev. → Ecosystem design</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>responsibilities and interactions</li>
+<li>Good design: clear responsibility and natural interactions</li>
+</ul>
+</div>
+
+</article>
+<article class="admonition- slide level-2">
+<p>Novice designs are littered with regressions to global thinking</p>
+<p>—Kent Beck and Ward Cunningham</p>
+
+</article>
+<article class="slide level-1" id="oo-mindset">
+<h1>OO Mindset</h1>
+<blockquote>
+<div><p>Give up global knowledge of control… and rely on the local knowledge of
+objects to accomplish [program] tasks.</p>
+<p class="attribution">&mdash;Beck and Cunningham</p>
+</div></blockquote>
+
+</article>
+<article class="slide level-1" id="how">
+<h1>How?</h1>
+
+</article>
+<article class="slide level-2" id="id1">
+<h2>How</h2>
+<ul class="simple">
+<li>Brainstorm; stories and scenarios</li>
+</ul>
+<ul class="build simple">
+<li>BDD</li>
+<li>Agile</li>
+<li>Patterns</li>
+<li>Refactoring</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Design is an art, but these techniques represent our struggle to understand
+and discipline that art.</p>
+<ul class="last simple">
+<li>Brainstorm; stories and scenarios</li>
+<li>BDD: test early and often</li>
+<li>Agile: frequent releases, CI, user feedback</li>
+<li>Patterns: named solution approaches to common problems</li>
+<li>Refactoring: fight creep and rot through aggressive hygiene and maintenance</li>
+</ul>
+</div>
+
+</article>
+<article class="slide level-2" id="srp">
+<h2>SRP</h2>
+<blockquote>
+<div><p>A class should have only one reason to change.</p>
+<p class="attribution">&mdash;Robert C. &quot;Uncle Bob&quot; Martin</p>
+</div></blockquote>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>reason for change = Responsibility</li>
+<li>What is it that this function/method/class/module/package/dist/app/system
+<em>does</em>?</li>
+<li>More responsibilities = more reasons to change = more impact of any change
+on other, probably unrelated stuff</li>
+</ul>
+</div>
+
+</article>
+<article class="slide level-1" id="fifteen-puzzle">
+<h1>Fifteen Puzzle</h1>
+
+</article>
+<article class="slide level-2" id="fifteen-puzzle-srp">
+<h2>Fifteen Puzzle &amp; SRP</h2>
+<ul class="build simple">
+<li>model != UI (persistence, comm., etc.)</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">model: state of the world and available actions to manipulate that state</p>
+</div>
+
+</article>
+<article class="slide level-1" id="crc">
+<h1>CRC</h1>
+<ul class="build simple">
+<li>Class</li>
+<li>Responsibility</li>
+<li>Collaboration</li>
+</ul>
+
+</article>
+<article class="admonition- slide level-1">
+<div class="highlight-text"><div class="highlight"><pre>Puzzle
+------
+
+init state          | View
+move tile           | Controller
+available moves     |
+is solved           |
+shuffle             |
+coordinates for     |
+__str__             |
+</pre></div>
+</div>
+
+</article>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Technically __str__ could be considered UI, but it is helpful for
+debugging; it's also tedious, verbose, and not obvious to put it
+somewhere else in most cases.</p>
+<p class="last">Views should not rely on __str__; those that do will be fragile</p>
+</div>
+<article class="slide level-1" id="two-approaches">
+<h1>Two approaches</h1>
+
+</article>
+<article class="slide level-2" id="conclusion">
+<h2>Conclusion</h2>
+
+</article>
+<article class="slide level-1" id="id2">
+<h1>?</h1>
+
+</article>
+<article class="slide level-2" id="resources">
+<h2>Resources</h2>
+<ul class="simple">
+<li><a class="reference external" href="http://c2.com/doc/oopsla89/paper.html">A Laboratory for Teaching Object Oriented Thinking</a> Beck &amp; Cunningham</li>
+</ul>
+
+</article>
+
+
+</section>
+
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '2013.10.10',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/common.js"></script>
+    <script type="text/javascript" src="_static/slides.js"></script>
+    <script type="text/javascript" src="_static/sync.js"></script>
+    <script type="text/javascript" src="_static/controller.js"></script>
+    <script type="text/javascript" src="_static/init.js"></script>
+    
+  </body>
+</html>

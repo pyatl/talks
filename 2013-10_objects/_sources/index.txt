@@ -1,0 +1,179 @@
+====================
+Musing about Objects
+====================
+
+| Daniel J. Rocco, Ph.D.
+| @drocco007
+
+.. image:: _static/circular_tree.png
+    :class: fill
+
+
+
+=======
+Objects
+=======
+
+.. rst-class:: build
+
+* know stuff
+* do stuff
+
+.. note::
+
+    * know: state, field values, collaborators
+    * do:  actions the object can carry out
+    * e.g. str: knows characters, length; does: contains, substitute, lower
+
+
+No Object Is an Island
+======================
+
+.. rst-class:: build
+
+* object ecosystem
+* OO S/W dev. → Ecosystem design
+
+.. note::
+
+    * responsibilities and interactions
+    * Good design: clear responsibility and natural interactions
+
+
+.. slide::
+
+    Novice designs are littered with regressions to global thinking
+
+    —Kent Beck and Ward Cunningham
+
+
+==========
+OO Mindset
+==========
+
+    Give up global knowledge of control… and rely on the local knowledge of
+    objects to accomplish [program] tasks.
+
+    —Beck and Cunningham
+
+
+====
+How?
+====
+
+How
+===
+
+* Brainstorm; stories and scenarios
+
+.. rst-class:: build
+
+* BDD
+* Agile
+* Patterns
+* Refactoring
+
+
+.. note::
+
+    Design is an art, but these techniques represent our struggle to understand
+    and discipline that art.
+
+    * Brainstorm; stories and scenarios
+    * BDD: test early and often
+    * Agile: frequent releases, CI, user feedback
+    * Patterns: named solution approaches to common problems
+    * Refactoring: fight creep and rot through aggressive hygiene and maintenance
+
+
+SRP
+===
+
+    A class should have only one reason to change.
+
+    —Robert C. "Uncle Bob" Martin
+
+.. note::
+
+    * reason for change = Responsibility
+    * What is it that this function/method/class/module/package/dist/app/system
+      *does*?
+    * More responsibilities = more reasons to change = more impact of any change
+      on other, probably unrelated stuff
+
+
+==================
+Fifteen Puzzle
+==================
+
+
+Fifteen Puzzle & SRP
+====================
+
+.. rst-class:: build
+
+* model != UI (persistence, comm., etc.)
+
+
+.. note::
+
+    model: state of the world and available actions to manipulate that state
+
+
+===
+CRC
+===
+
+.. rst-class:: build
+
+* Class
+* Responsibility
+* Collaboration
+
+
+
+.. slide::
+
+    .. code-block:: text
+
+        Puzzle
+        ------
+
+        init state          | View
+        move tile           | Controller
+        available moves     |
+        is solved           |
+        shuffle             |
+        coordinates for     |
+        __str__             |
+
+
+.. note::
+
+    Technically __str__ could be considered UI, but it is helpful for
+    debugging; it's also tedious, verbose, and not obvious to put it
+    somewhere else in most cases.
+
+    Views should not rely on __str__; those that do will be fragile
+
+
+==============
+Two approaches
+==============
+
+
+Conclusion
+==========
+
+
+===
+ ?
+===
+
+
+Resources
+=========
+
+* `A Laboratory for Teaching Object Oriented Thinking`_ Beck & Cunningham
+
+.. _A Laboratory for Teaching Object Oriented Thinking: http://c2.com/doc/oopsla89/paper.html

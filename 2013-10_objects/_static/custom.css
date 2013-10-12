@@ -1,0 +1,101 @@
+
+.slides > article {
+    border: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    /*font: 44px/50px'LeagueGothicRegular', Arial, sans-serif;*/
+}
+
+.slide > h1,h2 {
+    /*font: 60px/68px 'LeagueGothicRegular', Arial, sans-serif;*/
+}
+
+.slide > h2 {
+    bottom: 0px;
+    left: 0px;
+    background-color: rgba(0,0,0, 0.1);
+    padding: 10px 40px;
+
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+}
+
+
+ul li::before {
+    content: none;
+}
+
+img.fill {
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+}
+
+#musing-about-objects {
+    padding-left: 0;
+    border: none;
+    background: transparent;
+
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+
+#musing-about-objects h1 {
+    padding: 80px 0 20px 0;
+    background-color: rgba(255, 255, 255, 0.85);
+    margin-top: 100px;
+}
+
+#musing-about-objects .line-block {
+    padding: 40px 0 60px 0;
+    background-color: rgba(255, 255, 255, 0.85);
+    /*font-size: 3em;*/
+    /*line-height: 0.85;*/
+    margin-top: 0;
+}
+
+.background-attribution {
+    position: absolute;
+    bottom: 0;
+    font-size: 0.4em;
+}
+
+.gm-asplode {
+    position: relative;
+    top: -5em;
+    right: -7em;
+    color: #333;
+}
+
+.gm-asplode li {
+    font-size: 250%;
+    line-height: 0.6;
+}
+
+.airlift {
+    margin-top: -4em;
+}
+
+.not-this {
+    position: relative;
+    top: 1.5em;
+    clear: both;
+}
+
+.clearfix {
+    clear: both;
+}
+
+.pull-left {
+    float: left;
+}
+
+.pull-right {
+    float: right;
+}
