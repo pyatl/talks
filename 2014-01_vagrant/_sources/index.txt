@@ -1,0 +1,47 @@
+
+.. vagrant up slides file, created by
+   hieroglyph-quickstart on Thu Jan  9 15:40:34 2014.
+
+
+vagrant up
+==========
+
+| Daniel Rocco
+| @drocco007
+
+why?
+====
+
+``vagrant:system :: virtualenvwrapper:python``
+==============================================
+
+vagrant init
+============
+
+
+.. slide::
+
+	::
+
+		vagrant box add precise64 http://files.vagrantup.com/precise64.box
+
+vagrant init precise64
+======================
+
+vagrant up
+==========
+
+vagrant ssh
+===========
+
+/vagrant
+========
+
+port forwarding
+===============
+
+vagrant destroy
+===============
+
+vagrant halt
+============

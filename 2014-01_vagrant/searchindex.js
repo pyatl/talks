@@ -1,0 +1,1 @@
+Search.setIndex({envversion:42,terms:{content:[],virtualenvwrapp:[],python:[],system:[],drocco007:0,daniel:0,rocco:0},objtypes:{},objnames:{},filenames:["index"],titles:["vagrant up"],objects:{},titleterms:{box:[],http:[],vagrantup:[],python:0,destroi:0,vagrant:0,system:0,why:0,init:0,add:[],precise64:0,ssh:0,file:[],forward:0,virtualenvwrapp:0,com:[],port:0,halt:0}})
