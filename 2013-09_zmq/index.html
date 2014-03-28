@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Let&#39;s Talk &mdash; Let&#39;s Talk 2013.09.10 documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/styles.css" type="text/css" />
+    <link rel="stylesheet" href="_static/league.css" type="text/css" />
+    
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
+
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2013.09.10',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/common.js"></script>
+    <script type="text/javascript" src="_static/slides.js"></script>
+    <script type="text/javascript" src="_static/sync.js"></script>
+    <script type="text/javascript" src="_static/controller.js"></script>
+    <script type="text/javascript" src="_static/init.js"></script>
+    
+    <link rel="top" title="Let&#39;s Talk 2013.09.10 documentation" href="#" /> 
+  </head>
+  <body>
+
+<section
+   id="slide_container"
+   class='slides layout-regular'>
+
+
+  <article class="slide level-1" id="let-s-talk">
+<h1>Let's Talk</h1>
+<div class="line-block">
+<div class="line">Or, How I Learned to Stop Worrying and Love the Socket</div>
+<div class="line"><br /></div>
+<div class="line">Daniel J. Rocco, Ph.D.</div>
+<div class="line">&#64;drocco007</div>
+</div>
+<p class="background-attribution"><a class="reference external" href="http://archive.anthonymattox.com/2007-2011-blog/work/spinal-network.html">Spinal Network</a> © Anthony Mattox CC BY NA</p>
+
+</article>
+<article class="slide level-1" id="how-do-i-write-applications">
+<h1>How Do I Write Applications?</h1>
+<ul class="build gm-asplode">
+<li><p class="first">Good,</p>
+<p>Modern</p>
+</li>
+</ul>
+<ul class="build airlift simple">
+<li>Distributed, Scalable, Integrated, Mobile</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li><strong>Flexible</strong>: structured to accommodate the certainty of changing requirements</li>
+<li><strong>Maintainable</strong>: finding/fixing bugs easy b/c bug characteristics pinpoint origin</li>
+<li>integrated e.g. with social</li>
+</ul>
+</div>
+
+</article>
+<article class="slide level-2" id="mobile">
+<h2>Mobile</h2>
+<ul class="build">
+<li><img alt="_images/nexus_one_sm.jpg" class="pull-left first" src="_images/nexus_one_sm.jpg" />
+<p>← this</p>
+</li>
+<li><p class="not-this first">not this →</p>
+<img alt="_images/mobile_sm.jpg" class="pull-right" src="_images/mobile_sm.jpg" />
+</li>
+</ul>
+
+</article>
+<article class="slide level-2" id="srp">
+<h2>SRP</h2>
+<blockquote>
+<div><p>A class should have only one reason to change.</p>
+<p class="attribution">&mdash;Robert C. &quot;Uncle Bob&quot; Martin</p>
+</div></blockquote>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>reason for change = Responsibility</li>
+<li>What is it that this function/method/class/module/package/dist/app/system
+<em>does</em>?</li>
+<li>More responsibilities = more reasons to change = more impact of any change
+on other, probably unrelated stuff</li>
+</ul>
+</div>
+
+</article>
+<article class="slide level-2" id="reject-an-example">
+<h2>Reject: An Example</h2>
+<p>As an Instructor,</p>
+<p>So that I can maintain the integrity of my exams,</p>
+<p>I want to reject applications from candidates I don't recognize or who are
+ineligible.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">bog standard who-why-what user story</p>
+</div>
+
+</article>
+<article class="admonition- slide level-2">
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">reject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+           <span class="n">notify_acct_mgr</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+           <span class="n">disassociate</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+
+    <span class="c"># open exam section slot (1)</span>
+    <span class="c"># notify account manager (17)</span>
+    <span class="c"># check roster status (1)</span>
+    <span class="c"># add candidate note (1)</span>
+    <span class="c"># dict for email (22)</span>
+    <span class="c"># disassociate candidate (2)</span>
+</pre></div>
+</div>
+
+</article>
+<article class="admonition- slide level-2">
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># reject (cont.)</span>
+
+<span class="k">if</span> <span class="n">institution_pay</span><span class="p">:</span>
+    <span class="c"># notify candidate (8)</span>
+    <span class="c"># delete/cancel app (4)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">reschedule</span><span class="p">:</span>
+        <span class="c"># do reschedule (17)</span>
+        <span class="c"># notify accounting (8)</span>
+        <span class="c"># add candidate note (1)</span>
+</pre></div>
+</div>
+
+</article>
+<article class="admonition- slide level-2">
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># reject (cont.)</span>
+
+    <span class="k">else</span><span class="p">:</span> <span class="c"># not reschedule</span>
+        <span class="c"># withdraw app (1)</span>
+        <span class="c"># add candidate note (1)</span>
+
+    <span class="c"># notify candidate (7)</span>
+</pre></div>
+</div>
+
+</article>
+<article class="slide level-2" id="what-s-wrong-with-this-picture">
+<h2>What's Wrong with this Picture?</h2>
+<ul class="build">
+<li><p class="first"><tt class="docutils literal"><span class="pre">reject</span></tt> &gt;= 6 responsibilities</p>
+</li>
+<li><p class="first">I can haz problem?</p>
+<blockquote>
+<div><ul class="build simple">
+<li>Works, how?</li>
+<li>&quot;Put that anywhere&quot;</li>
+<li>Minimal... impact?</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+
+</article>
+<article class="slide level-2" id="it-s-like-a-mobile">
+<h2>&quot;It's Like a Mobile&quot;</h2>
+<ul class="build">
+<li><img alt="_images/mobile_sm.jpg" class="pull-left first" src="_images/mobile_sm.jpg" />
+<p>← this</p>
+</li>
+<li><p class="not-this first">not this →</p>
+<img alt="_images/nexus_one_sm.jpg" class="pull-right" src="_images/nexus_one_sm.jpg" />
+</li>
+</ul>
+
+</article>
+<article class="fade-in slide level-2">
+<img alt="_images/your_code_here.jpg" class="fill" src="_images/your_code_here.jpg" />
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Any change will throw off the balance, requiring changes in other parts.
+Lather, rinse, repeat.</p>
+</div>
+
+</article>
+<article class="slide level-2" id="how-did-it-get-this-way">
+<h2>How did it get this way?</h2>
+<ul class="simple">
+<li>accretion</li>
+<li>viscosity</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">viscosity: doing things right is harder than doing things wrong</p>
+</div>
+
+</article>
+<article class="slide level-2" id="simply-reject">
+<h2>Simply Reject</h2>
+<ul>
+<li><p class="first">rejection logic + rejection event notice</p>
+<blockquote>
+<div><ul class="simple">
+<li>adjust section/roster</li>
+<li>notify account manager</li>
+<li>notify candidate</li>
+<li>notify accounting...</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+
+</article>
+<article class="slide level-1" id="what-if-we-built-systems-the-same-way">
+<h1>What if we built systems the same way?</h1>
+
+</article>
+<article class="slide level-2" id="you-can-t-do-that">
+<h2>You can't do that!</h2>
+<blockquote>
+<div>&quot;Connecting a few programs across a few sockets is plain nasty when you
+start to handle real life situations.&quot;</div></blockquote>
+
+</article>
+<article class="slide level-1" id="enter-omq">
+<h1>Enter ØMQ</h1>
+
+</article>
+<article class="slide level-2" id="omq">
+<h2>ØMQ</h2>
+<blockquote>
+<div>&quot;The physics of software is the physics of people—specifically, our limitations when it comes to complexity, and our desire to work together to solve large problems in pieces.&quot;</div></blockquote>
+
+</article>
+<article class="slide level-2" id="id1">
+<h2>ØMQ</h2>
+<ul class="simple">
+<li>ubiquitous connected code</li>
+<li>simplest possible building blocks</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">connect code across a process or across continents</p>
+</div>
+
+</article>
+<article class="slide level-2" id="o">
+<h2>Ø</h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">zmq</span>
+
+<span class="n">context</span> <span class="o">=</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Context</span><span class="p">()</span>
+<span class="n">socket</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">REP</span><span class="p">)</span>
+<span class="n">socket</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s">&quot;tcp://*:5555&quot;</span><span class="p">)</span>
+
+<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
+    <span class="n">socket</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">&quot;World&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+
+</article>
+<article class="slide level-2" id="id2">
+<h2>Ø</h2>
+<ul class="simple">
+<li>management interface, one per process</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">context</span> <span class="o">=</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Context</span><span class="p">()</span>
+</pre></div>
+</div>
+
+</article>
+<article class="slide level-2" id="id3">
+<h2>Ø</h2>
+<ul class="simple">
+<li>socket: communication endpoint (N/thread)</li>
+<li>bind: establish server</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">socket</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">REP</span><span class="p">)</span>
+<span class="n">socket</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s">&quot;tcp://*:5555&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>bind: several available transports: tcp, ipc, inproc, ...</li>
+</ul>
+</div>
+
+</article>
+<article class="slide level-2" id="id4">
+<h2>Ø</h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
+    <span class="n">socket</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s">&quot;World&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+
+</article>
+<article class="slide level-2" id="hwclient">
+<h2>hwclient</h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">zmq</span>
+<span class="n">socket</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">REQ</span><span class="p">)</span>
+<span class="n">socket</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&quot;tcp://localhost:5555&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">request</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">socket</span><span class="o">.</span><span class="n">send</span> <span class="p">(</span><span class="s">&quot;Hello&quot;</span><span class="p">)</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
+</pre></div>
+</div>
+
+</article>
+<article class="slide level-2" id="hwdemo-notes">
+<h2>hwdemo/notes</h2>
+<ul class="build">
+<li><p class="first">atomic messages</p>
+</li>
+<li><p class="first">Request—Response topology</p>
+<blockquote>
+<div><ul class="build simple">
+<li>1:1 messages</li>
+<li>client initiated</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>demo</p>
+<ul class="last simple">
+<li>basic</li>
+<li>multiple</li>
+<li>client first (!)</li>
+</ul>
+</div>
+
+</article>
+<article class="slide level-2" id="pseudo-fizzbuzz">
+<h2>Pseudo-FizzBuzz</h2>
+<ul class="build">
+<li><p class="first">Publish—Subscribe topology</p>
+<blockquote>
+<div><ul class="build simple">
+<li>asynchronous publishing</li>
+<li>M:N</li>
+<li>fair queuing</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+
+</article>
+<article class="slide level-2" id="venting-the-fizz">
+<h2>Venting the Fizz</h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">context</span> <span class="o">=</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Context</span><span class="p">()</span>
+
+<span class="n">socket</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">PUB</span><span class="p">)</span>
+<span class="n">socket</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s">&quot;tcp://*:5555&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">cycle</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">101</span><span class="p">)):</span>
+    <span class="n">socket</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">index</span><span class="p">))</span>
+</pre></div>
+</div>
+
+</article>
+<article class="slide level-2" id="buzzing">
+<h2>Buzzing</h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">socket</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">SUB</span><span class="p">)</span>
+
+<span class="n">socket</span><span class="o">.</span><span class="n">setsockopt</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">SUBSCRIBE</span><span class="p">,</span>
+                  <span class="s">&#39;&#39;</span><span class="p">)</span>
+
+<span class="n">value</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
+</pre></div>
+</div>
+
+</article>
+<article class="slide level-2" id="observe">
+<h2>Observe</h2>
+<ul>
+<li><p class="first">Publishers DO NOT WAIT (synchronize)</p>
+</li>
+<li><p class="first">Ideas</p>
+<blockquote>
+<div><ul class="simple">
+<li>status/heartbeat</li>
+<li>inter-thread/process sync</li>
+<li><a class="reference external" href="http://blog.pythonisito.com/2011/07/gevent-zeromq-websockets-and-flot-ftw.html">analytics viz</a> (thanks &#64;rick446!)</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+
+</article>
+<article class="slide level-2" id="a-little-supercomputing">
+<h2>A Little Supercomputing</h2>
+<div class="line-block">
+<div class="line">distributed image processing</div>
+</div>
+<img alt="_images/image_farm.png" class="align-center" src="_images/image_farm.png" />
+
+</article>
+<article class="slide level-2" id="speaking-in-pictures">
+<h2>Speaking in Pictures</h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sender</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">PUSH</span><span class="p">)</span>
+<span class="n">sender</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s">&quot;tcp://*:5557&quot;</span><span class="p">)</span>
+
+<span class="n">payload</span> <span class="o">=</span> <span class="n">filename</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+<span class="c"># ♥ Python</span>
+<span class="n">sender</span><span class="o">.</span><span class="n">send_pyobj</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+</pre></div>
+</div>
+
+</article>
+<article class="slide level-2" id="workin-all-the-time">
+<h2>Workin' All The Time</h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">receiver</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">PULL</span><span class="p">)</span>
+<span class="n">sender</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">PUSH</span><span class="p">)</span>
+
+<span class="n">image_name</span><span class="p">,</span> <span class="n">image_data</span> <span class="o">=</span>
+    <span class="n">receiver</span><span class="o">.</span><span class="n">recv_pyobj</span><span class="p">()</span>
+
+<span class="n">sender</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">output_filename</span><span class="p">)</span>
+</pre></div>
+</div>
+
+</article>
+<article class="slide level-1" id="connecting-code-is-hard">
+<h1>connecting code is hard</h1>
+
+</article>
+<article class="slide level-1" id="omq-can-help">
+<h1>ØMQ can help</h1>
+
+</article>
+<article class="admonition- slide level-1">
+<ul class="simple">
+<li><a class="reference external" href="https://github.com/pyatl/talks/tree/master/2013-09/zmq">the examples</a></li>
+<li><a class="reference external" href="http://zguide.zeromq.org/page:all">ØMQ guide</a></li>
+<li><a class="reference external" href="https://github.com/zeromq/pyzmq">pyzmq binding</a></li>
+</ul>
+
+</article>
+
+
+</section>
+
+<section id="slide_notes">
+
+</section>
+
+  </body>
+</html>

@@ -1,0 +1,435 @@
+
+.. Let's Talk slides file, created by
+   hieroglyph-quickstart on Tue Sep 10 22:43:09 2013.
+
+==========
+Let's Talk
+==========
+
+| Or, How I Learned to Stop Worrying and Love the Socket
+|
+| Daniel J. Rocco, Ph.D.
+| @drocco007
+
+
+.. rst-class:: background-attribution
+
+`Spinal Network`_ © Anthony Mattox CC BY NA
+
+.. _Spinal Network: http://archive.anthonymattox.com/2007-2011-blog/work/spinal-network.html
+
+
+============================
+How Do I Write Applications?
+============================
+
+.. rst-class:: build gm-asplode
+
+*
+    Good,
+
+    Modern
+
+
+.. rst-class:: build airlift
+
+* Distributed, Scalable, Integrated, Mobile
+
+
+.. note::
+
+    * **Flexible**: structured to accommodate the certainty of changing requirements
+    * **Maintainable**: finding/fixing bugs easy b/c bug characteristics pinpoint origin
+    * integrated e.g. with social
+
+
+Mobile
+======
+
+.. rst-class:: build
+
+*
+    .. image:: _static/nexus_one_sm.jpg
+        :class: pull-left
+
+    ← this
+
+*
+    .. rst-class:: not-this
+
+    not this →
+
+    .. image:: _static/mobile_sm.jpg
+        :class: pull-right
+
+
+SRP
+===
+
+    A class should have only one reason to change.
+
+    —Robert C. "Uncle Bob" Martin
+
+.. note::
+
+    * reason for change = Responsibility
+    * What is it that this function/method/class/module/package/dist/app/system
+      *does*?
+    * More responsibilities = more reasons to change = more impact of any change
+      on other, probably unrelated stuff
+
+
+Reject: An Example
+==================
+
+As an Instructor,
+
+So that I can maintain the integrity of my exams,
+
+I want to reject applications from candidates I don't recognize or who are
+ineligible.
+
+.. note::
+
+    bog standard who-why-what user story
+
+
+.. slide::
+
+    .. code-block:: python
+
+        def reject(self,
+                   notify_acct_mgr=False,
+                   disassociate=False):
+
+            # open exam section slot (1)
+            # notify account manager (17)
+            # check roster status (1)
+            # add candidate note (1)
+            # dict for email (22)
+            # disassociate candidate (2)
+
+
+.. slide::
+
+    .. code-block:: python
+
+        # reject (cont.)
+
+        if institution_pay:
+            # notify candidate (8)
+            # delete/cancel app (4)
+        else:
+            if reschedule:
+                # do reschedule (17)
+                # notify accounting (8)
+                # add candidate note (1)
+
+.. slide::
+
+    .. code-block:: python
+
+        # reject (cont.)
+
+            else: # not reschedule
+                # withdraw app (1)
+                # add candidate note (1)
+
+            # notify candidate (7)
+
+
+What's Wrong with this Picture?
+===============================
+
+.. rst-class:: build
+
+* ``reject`` >= 6 responsibilities
+* I can haz problem?
+
+    .. rst-class:: build
+
+    * Works, how?
+    * "Put that anywhere"
+    * Minimal... impact?
+
+
+"It's Like a Mobile"
+====================
+
+.. rst-class:: build
+
+*
+    .. image:: _static/mobile_sm.jpg
+        :class: pull-left
+
+    ← this
+
+*
+    .. rst-class:: not-this
+
+    not this →
+
+    .. image:: _static/nexus_one_sm.jpg
+        :class: pull-right
+
+
+.. slide::
+    :class: fade-in
+
+    .. image:: _static/your_code_here.jpg
+        :class: fill
+
+    .. note::
+
+        Any change will throw off the balance, requiring changes in other parts.
+        Lather, rinse, repeat.
+
+
+How did it get this way?
+========================
+
+* accretion
+* viscosity
+
+.. note::
+
+    viscosity: doing things right is harder than doing things wrong
+
+
+Simply Reject
+=============
+
+* rejection logic + rejection event notice
+
+    * adjust section/roster
+    * notify account manager
+    * notify candidate
+    * notify accounting...
+
+
+======================================
+What if we built systems the same way?
+======================================
+
+
+You can't do that!
+==================
+
+    "Connecting a few programs across a few sockets is plain nasty when you
+    start to handle real life situations."
+
+
+=========
+Enter ØMQ
+=========
+
+
+ØMQ
+===
+
+    "The physics of software is the physics of people—specifically, our limitations when it comes to complexity, and our desire to work together to solve large problems in pieces."
+
+
+ØMQ
+===
+
+* ubiquitous connected code
+* simplest possible building blocks
+
+.. note::
+
+    connect code across a process or across continents
+
+
+Ø
+=
+
+.. code-block:: python
+
+    import zmq
+
+    context = zmq.Context()
+    socket = context.socket(zmq.REP)
+    socket.bind("tcp://*:5555")
+
+    while True:
+        message = socket.recv()
+        socket.send("World")
+
+
+Ø
+=
+
+* management interface, one per process
+
+.. code-block:: python
+
+    context = zmq.Context()
+
+
+Ø
+=
+
+* socket: communication endpoint (N/thread)
+
+* bind: establish server
+
+.. code-block:: python
+
+    socket = context.socket(zmq.REP)
+    socket.bind("tcp://*:5555")
+
+
+.. note::
+
+    * bind: several available transports: tcp, ipc, inproc, ...
+
+
+Ø
+=
+
+.. code-block:: python
+
+    while True:
+        message = socket.recv()
+        socket.send("World")
+
+hwclient
+========
+
+.. code-block:: python
+
+    import zmq
+    socket = context.socket(zmq.REQ)
+    socket.connect("tcp://localhost:5555")
+
+    for request in range (10):
+        socket.send ("Hello")
+        message = socket.recv()
+
+
+hwdemo/notes
+============
+
+.. rst-class:: build
+
+* atomic messages
+* Request—Response topology
+
+    .. rst-class:: build
+
+    * 1:1 messages
+    * client initiated
+
+.. note::
+
+    demo
+
+    * basic
+    * multiple
+    * client first (!)
+
+
+Pseudo-FizzBuzz
+===============
+
+.. rst-class:: build
+
+* Publish—Subscribe topology
+
+    .. rst-class:: build
+
+    * asynchronous publishing
+    * M:N
+    * fair queuing
+
+
+Venting the Fizz
+================
+
+.. code-block:: python
+
+    context = zmq.Context()
+
+    socket = context.socket(zmq.PUB)
+    socket.bind("tcp://*:5555")
+
+    for index in cycle(range(1, 101)):
+        socket.send(str(index))
+
+
+Buzzing
+================
+
+.. code-block:: python
+
+    socket = context.socket(zmq.SUB)
+
+    socket.setsockopt(zmq.SUBSCRIBE,
+                      '')
+
+    value = socket.recv()
+
+
+Observe
+=======
+
+* Publishers DO NOT WAIT (synchronize)
+* Ideas
+
+    * status/heartbeat
+    * inter-thread/process sync
+    * `analytics viz`_ (thanks @rick446!)
+
+    .. _analytics viz: http://blog.pythonisito.com/2011/07/gevent-zeromq-websockets-and-flot-ftw.html
+
+
+A Little Supercomputing
+=======================
+
+| distributed image processing
+
+.. image:: _static/image_farm.png
+    :align: center
+
+
+Speaking in Pictures
+====================
+
+.. code-block:: python
+
+    sender = context.socket(zmq.PUSH)
+    sender.bind("tcp://*:5557")
+
+    payload = filename, f.read()
+
+    # ♥ Python
+    sender.send_pyobj(payload)
+
+
+Workin' All The Time
+====================
+
+.. code-block:: python
+
+    receiver = context.socket(zmq.PULL)
+    sender = context.socket(zmq.PUSH)
+
+    image_name, image_data =
+        receiver.recv_pyobj()
+
+    sender.send(output_filename)
+
+=======================
+connecting code is hard
+=======================
+
+============
+ØMQ can help
+============
+
+.. slide::
+
+    * `the examples <https://github.com/pyatl/talks/tree/master/2013-09/zmq>`_
+    * `ØMQ guide <http://zguide.zeromq.org/page:all>`_
+    * `pyzmq binding <https://github.com/zeromq/pyzmq>`_
