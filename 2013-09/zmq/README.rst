@@ -7,6 +7,10 @@
 
 Example code for my September 2013 PyAtl talk *Let's Talk*.
 
+`Talk slides <http://pyatl.github.io/talks/2013-09_zmq/>`_; note that the
+background looks pretty good at projector resolution but a little weird on a
+full resolution display. :/
+
 
 hello
 =====
