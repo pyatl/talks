@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="@drocco007" />
+  <title>Party Like It’s 500BC</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="reveal.js/css/reveal.min.css"/>
+    <style type="text/css">code{white-space: pre;}</style>
+    <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+    </style>
+    <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" media="print" href="reveal.js/css/print/pdf.css" />
+  <!--[if lt IE 9]>
+  <script src="reveal.js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <!-- <h1 class="title">Party Like It’s <br/> 500BC</h1> -->
+    <div class="title">
+      <div>Party Like It's</div>
+      <div class="">500BC</div>
+    </div>
+
+    <h2 class="author">@drocco007</h2>
+    <h3 class="date">11 VIIII MMXIIII</h3>
+</section>
+
+<section id="this-talk" class="slide level1">
+<h1>This Talk</h1>
+</section>
+<section class="slide level1">
+
+<p>build a calculation</p>
+</section>
+<section class="slide level1">
+
+<p><em>design and</em> build a calculation</p>
+</section>
+<section class="slide level1">
+
+<p><em>iteratively</em> design and build a <em>complex</em> calculation</p>
+</section>
+<section class="slide level1">
+
+<blockquote>
+<p>given a positive integer,</p>
+<p>return its equivalent representation</p>
+<p>in <em>additive</em> (ca 500BC) Roman numerals</p>
+</blockquote>
+</section>
+<section id="section" class="slide level1">
+<h1>0</h1>
+<ul>
+<li class="fragment">uh…</li>
+<li class="fragment">The Romans didn’t have a symbol for 0…</li>
+</ul>
+</section>
+<section id="i" class="slide level1">
+<h1>I!!!</h1>
+</section>
+<section class="slide level1">
+
+<p>for small numbers of static conversions,</p>
+<p>we could use a <em>mapping</em></p>
+</section>
+<section class="slide level1">
+
+<pre class="sourceCode python"><code class="sourceCode python">&gt;&gt;&gt; d_to_r = {
+...     <span class="dv">1</span>: <span class="st">&#39;I&#39;</span>,
+...     <span class="dv">8</span>: <span class="st">&#39;VIII&#39;</span>,
+...     <span class="dv">9</span>: <span class="st">&#39;VIIII&#39;</span>,
+...     <span class="dv">42</span>: <span class="st">&#39;XXXXII&#39;</span>,
+...     <span class="dv">2014</span>: <span class="st">&#39;MMXIIII&#39;</span>,
+... }</code></pre>
+</section>
+<section class="slide level1">
+
+<pre class="sourceCode python"><code class="sourceCode python">&gt;&gt;&gt; d_to_r[<span class="dv">2014</span>]
+<span class="co">&#39;MMXIIII&#39;</span></code></pre>
+</section>
+<section class="slide level1">
+
+<p>But we have to know in advance</p>
+<p>which numbers we need…</p>
+<pre class="sourceCode python"><code class="sourceCode python">&gt;&gt;&gt; d_to_r[<span class="dv">2015</span>]
+Traceback (most recent call last):
+    ...
+<span class="ot">KeyError</span>: <span class="dv">2015</span></code></pre>
+</section>
+<section class="slide level1">
+
+<p>so unless you’re clairvoyant…</p>
+<ul>
+<li class="fragment">(if you are clairvoyant…</li>
+<li class="fragment"> we’re hiring! :)</li>
+</ul>
+</section>
+<section class="slide level1">
+
+<p>absent clairvoyance,</p>
+<p>this is maintenance tedium</p>
+</section>
+<section id="ii.-alternative" class="slide level1">
+<h1>II. Alternative</h1>
+<p><em>calculate</em> using an <em>algorithm</em></p>
+</section>
+<section class="slide level1">
+
+<p><em>algorithm</em></p>
+<ul>
+<li class="fragment"><p>defined series of steps</p>
+<p>to compute an output</p>
+<p>given some input</p></li>
+</ul>
+</section>
+<section class="slide level1">
+
+<p>like a <em>recipe</em></p>
+</section>
+<section class="slide level1">
+
+<p>like a recipe, <em>but automated</em>!</p>
+</section>
+<section class="slide level1">
+
+<blockquote>
+<p>given a positive integer,</p>
+<p>return its equivalent representation</p>
+<p>in <em>additive</em> (ca 500BC) Roman numerals</p>
+</blockquote>
+</section>
+<section id="iii.-iterate" class="slide level1">
+<h1>III. Iterate</h1>
+</section>
+<section class="slide level1">
+
+<p>simplest case</p>
+<p>n = 1</p>
+</section>
+<section class="slide level1">
+
+<pre class="sourceCode python"><code class="sourceCode python">&gt;&gt;&gt; <span class="kw">def</span> roman(n):
+...     <span class="kw">return</span> <span class="st">&#39;I&#39;</span>
+
+&gt;&gt;&gt; roman(<span class="dv">1</span>)
+<span class="co">&#39;I&#39;</span></code></pre>
+</section>
+<section class="slide level1">
+
+<p>production ready…</p>
+<p><img src="random_number.png" alt="image" /></p>
+<ul>
+<li class="fragment">(algorithm courtesy xkcd)</li>
+</ul>
+</section>
+<section class="slide level1">
+
+<p>the I’s have it</p>
+</section>
+<section class="slide level1">
+
+<p>handy Python feature: string multiplication!</p>
+</section>
+<section class="slide level1">
+
+<p>(what?!)</p>
+</section>
+<section class="slide level1">
+
+<pre class="sourceCode python"><code class="sourceCode python">&gt;&gt;&gt; <span class="st">&#39;fa&#39;</span> + <span class="st">&#39; la&#39;</span> * <span class="dv">8</span>
+<span class="co">&#39;fa la la la la la la la la&#39;</span></code></pre>
+</section>
+<section class="slide level1">
+
+<p>useful for quickie debugging:</p>
+<pre class="sourceCode python"><code class="sourceCode python">&gt;&gt;&gt; <span class="dt">print</span> <span class="st">&#39;*&#39;</span> * <span class="dv">72</span>
+... <span class="co"># bugs go here</span>
+************************************************************************</code></pre>
+</section>
+<section class="slide level1">
+
+<p>or for tormenting children:</p>
+<pre class="sourceCode python"><code class="sourceCode python">&gt;&gt;&gt; <span class="st">&#39;I must not tell lies. &#39;</span> * <span class="dv">1000</span>  <span class="co"># doctest: +ELLIPSIS</span>
+<span class="co">&#39;I must not tell lies. I must not tell lies. I must not tell lies... &#39;</span></code></pre>
+</section>
+<section class="slide level1">
+
+<p>and, of course</p>
+<pre class="sourceCode python"><code class="sourceCode python">&gt;&gt;&gt; <span class="st">&#39;&#39;</span> * <span class="dv">1000000000000</span>
+<span class="co">&#39;&#39;</span></code></pre>
+</section>
+<section class="slide level1">
+
+<p>notice that if n ≤ 4,</p>
+<p>the Roman equivalent is</p>
+<p><em>n</em> Is!</p>
+</section>
+<section class="slide level1">
+
+<pre class="sourceCode python"><code class="sourceCode python">&gt;&gt;&gt; <span class="kw">def</span> roman(n):
+...     <span class="kw">return</span> <span class="st">&#39;I&#39;</span> * n
+&gt;&gt;&gt; roman(<span class="dv">4</span>)
+<span class="co">&#39;IIII&#39;</span></code></pre>
+</section>
+<section class="slide level1">
+
+<p>nice!</p>
+<pre class="sourceCode python"><code class="sourceCode python">&gt;&gt;&gt; roman(<span class="dv">3</span>)
+<span class="co">&#39;III&#39;</span>
+&gt;&gt;&gt; roman(<span class="dv">2</span>)
+<span class="co">&#39;II&#39;</span></code></pre>
+<p>and, to make sure we haven’t broken anything,</p>
+<pre class="sourceCode python"><code class="sourceCode python">&gt;&gt;&gt; roman(<span class="dv">1</span>)
+<span class="co">&#39;I&#39;</span></code></pre>
+</section>
+<section class="slide level1">
+
+<p>boo!</p>
+<pre class="sourceCode python"><code class="sourceCode python">&gt;&gt;&gt; <span class="dt">print</span> roman(<span class="dv">5</span>), <span class="st">&#39;☹&#39;</span>
+IIIII <span class="dv">☹</span>
+&gt;&gt;&gt; <span class="dt">print</span> roman(<span class="dv">10</span>), <span class="st">&#39;―(×_×)→&#39;</span>
+IIIIIIIIII ―(×_×)→</code></pre>
+</section>
+<section class="slide level1">
+
+<p>5–9</p>
+</section>
+<section class="slide level1">
+
+<p>why here?</p>
+</section>
+<section class="slide level1">
+
+<p>why here?</p>
+<p>next logical <em>class</em> of cases</p>
+</section>
+<section class="slide level1">
+
+<p>shared features:</p>
+<blockquote>
+<table>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">→</td>
+<td style="text-align: left;">V</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">6</td>
+<td style="text-align: left;">→</td>
+<td style="text-align: left;">VI</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">7</td>
+<td style="text-align: left;">→</td>
+<td style="text-align: left;">VII</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">…</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+</section>
+<section class="slide level1">
+
+<p>a <em>V</em> followed by</p>
+<p>some number of <strong>I</strong>s</p>
+<blockquote>
+<table>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">→</td>
+<td style="text-align: left;"><em>V</em></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">6</td>
+<td style="text-align: left;">→</td>
+<td style="text-align: left;"><em>V</em><strong>I</strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">7</td>
+<td style="text-align: left;">→</td>
+<td style="text-align: left;"><em>V</em><strong>II</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">…</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+</section>
+<section class="slide level1">
+
+<pre class="sourceCode python"><code class="sourceCode python">&gt;&gt;&gt; <span class="kw">def</span> roman(n):
+...     <span class="kw">return</span> <span class="st">&#39;V&#39;</span> + <span class="st">&#39;I&#39;</span> * (n - <span class="dv">5</span>)
+&gt;&gt;&gt; roman(<span class="dv">7</span>)
+<span class="co">&#39;VII&#39;</span></code></pre>
+</section>
+<section class="slide level1">
+
+<p>but…</p>
+<pre class="sourceCode python"><code class="sourceCode python">&gt;&gt;&gt; roman(<span class="dv">4</span>)
+<span class="co">&#39;V&#39;</span></code></pre>
+</section>
+<section class="slide level1">
+
+<p>that’s a <em>regression</em></p>
+</section>
+<section class="slide level1">
+
+<p><em>regression</em>:</p>
+<p>specific kind of bug</p>
+</section>
+<section class="slide level1">
+
+<p>regression:</p>
+<p>when the <em>addition</em> of a new feature</p>
+<p>or <em>extension</em> of an existing one</p>
+<p>breaks <strong>existing behavior</strong></p>
+</section>
+<section id="iiii.-design-options" class="slide level1">
+<h1>IIII. Design Options</h1>
+</section>
+<section class="slide level1">
+
+<p>problem contours, experience,</p>
+<p>language idiom, tools</p>
+<p>↓</p>
+<p><em>solution</em></p>
+</section>
+<section class="slide level1">
+
+<pre class="sourceCode python"><code class="sourceCode python">&gt;&gt;&gt; <span class="kw">def</span> roman(n):
+...     <span class="kw">if</span> n &gt;= <span class="dv">5</span>:
+...         <span class="kw">return</span> <span class="st">&#39;V&#39;</span> + <span class="st">&#39;I&#39;</span> * (n - <span class="dv">5</span>)
+...     <span class="kw">else</span>:
+...         <span class="kw">return</span> <span class="st">&#39;I&#39;</span> * n</code></pre>
+</section>
+<section class="slide level1">
+
+<p>this solution approaches the problem</p>
+<p>from the <em>decimal</em> side of the equation</p>
+</section>
+<section class="slide level1">
+
+<blockquote>
+<p>given an integer <em>n</em>,</p>
+<p>how do I turn it into Roman numerals?</p>
+</blockquote>
+</section>
+<section class="slide level1">
+
+<p>code smell: <em>repetition</em></p>
+</section>
+<section class="slide level1">
+
+<pre class="sourceCode python"><code class="sourceCode python">&gt;&gt;&gt; <span class="kw">def</span> roman(n):
+...     <span class="kw">if</span> n &gt;= <span class="dv">5</span>:
+...         <span class="kw">return</span> <span class="st">&#39;V&#39;</span> + <span class="st">&#39;I&#39;</span> * (n - <span class="dv">5</span>)
+...     <span class="kw">else</span>:
+...         <span class="kw">return</span> <span class="st">&#39;I&#39;</span> * n</code></pre>
+<p>notice that the V case</p>
+<p>is also worrying about the I case</p>
+</section>
+<section class="slide level1">
+
+<p>what if we refocused on the</p>
+<p><em>numeral</em> side of the problem?</p>
+</section>
+<section class="slide level1">
+
+<blockquote>
+<p>for each Roman numeral,</p>
+<p>how many are needed to represent an integer <em>n</em>?</p>
+</blockquote>
+</section>
+<section class="slide level1">
+
+<pre class="sourceCode python"><code class="sourceCode python">&gt;&gt;&gt; <span class="kw">def</span> roman(n):
+...     parts = []
+...     <span class="kw">if</span> n &gt;= <span class="dv">5</span>:
+...         parts.append(<span class="st">&#39;V&#39;</span>)
+...         n -= <span class="dv">5</span>  <span class="co"># n = n - 5</span>
+...     parts.append(<span class="st">&#39;I&#39;</span> * n)
+...     <span class="kw">return</span> <span class="st">&#39;&#39;</span>.join(parts)</code></pre>
+</section>
+<section class="slide level1">
+
+<pre class="sourceCode python"><code class="sourceCode python">&gt;&gt;&gt; roman(<span class="dv">9</span>)
+<span class="co">&#39;VIIII&#39;</span>
+&gt;&gt;&gt; roman(<span class="dv">7</span>)
+<span class="co">&#39;VII&#39;</span>
+&gt;&gt;&gt; roman(<span class="dv">5</span>)
+<span class="co">&#39;V&#39;</span>
+&gt;&gt;&gt; roman(<span class="dv">4</span>)
+<span class="co">&#39;IIII&#39;</span>
+&gt;&gt;&gt; roman(<span class="dv">1</span>)
+<span class="co">&#39;I&#39;</span></code></pre>
+</section>
+<section class="slide level1">
+
+<p>we are going to assemble the result</p>
+<p>from a list of parts</p>
+<pre class="sourceCode python"><code class="sourceCode python">parts = []</code></pre>
+</section>
+<section class="slide level1">
+
+<p>why?</p>
+<p>because we <em>don’t know in advance</em></p>
+<p>how many numerals we need</p>
+</section>
+<section class="slide level1">
+
+<p>the V case</p>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="co"># if we need one,</span>
+<span class="kw">if</span> n &gt;= <span class="dv">5</span>:
+
+    <span class="co"># save a V to the result</span>
+    parts.append(<span class="st">&#39;V&#39;</span>)
+
+    <span class="co"># mark that part of the input as handled</span>
+    n -= <span class="dv">5</span></code></pre>
+</section>
+<section class="slide level1">
+
+<p>the I case</p>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="co"># n guaranteed to be between 0 and 4</span>
+parts.append(<span class="st">&#39;I&#39;</span> * n)</code></pre>
+</section>
+<section class="slide level1">
+
+<p>assemble the parts and return</p>
+<pre class="sourceCode python"><code class="sourceCode python"><span class="co"># join the parts with the empty string (nothing)</span>
+<span class="co"># between them</span>
+<span class="kw">return</span> <span class="st">&#39;&#39;</span>.join(parts)</code></pre>
+</section>
+<section class="slide level1">
+
+<pre class="sourceCode python"><code class="sourceCode python">&gt;&gt;&gt; <span class="kw">def</span> roman(n):
+...     parts = []
+...     <span class="kw">if</span> n &gt;= <span class="dv">5</span>:
+...         parts.append(<span class="st">&#39;V&#39;</span>)
+...         n -= <span class="dv">5</span>  <span class="co"># n = n - 5</span>
+...     parts.append(<span class="st">&#39;I&#39;</span> * n)
+...     <span class="kw">return</span> <span class="st">&#39;&#39;</span>.join(parts)</code></pre>
+</section>
+<section class="slide level1">
+
+<p>this is the <em>art</em> of programming</p>
+</section>
+<section class="slide level1">
+
+<p>problem contours, experience,</p>
+<p>language idiom, tools</p>
+<p>↓</p>
+<p>?</p>
+<p>↙  ↘</p>
+<p>A        B</p>
+</section>
+<section class="slide level1">
+
+<p>both solutions are <em>correct</em></p>
+<p>over their input range</p>
+</section>
+<section class="slide level1">
+
+<p>which is more</p>
+<ul>
+<li class="fragment">readable</li>
+<li class="fragment">maintainable</li>
+<li class="fragment">extensible</li>
+</ul>
+</section>
+<section class="slide level1">
+
+<blockquote>
+<p>There is no model that is natural to all contexts!</p>
+<p>—Uncle Bob Martin</p>
+</blockquote>
+</section>
+<section class="slide level1">
+
+<ul>
+<li class="fragment">there is no “right answer”</li>
+<li class="fragment">the choice is not objective</li>
+</ul>
+</section>
+<section class="slide level1">
+
+<p>informed by</p>
+<p>problem contours, experience,</p>
+<p>language idiom, tools</p>
+</section>
+<section class="slide level1">
+
+<blockquote>
+<p>Since closure cannot be complete, it must be strategic. This takes a certain amount of prescience derived from experience.</p>
+<p>—Uncle Bob Martin</p>
+</blockquote>
+</section>
+<section class="slide level1">
+
+<p>this is why it’s important to</p>
+</section>
+<section class="slide level1">
+
+<p>never stop learning</p>
+</section>
+<section class="slide level1">
+
+<p>how did I choose?</p>
+</section>
+<section class="slide level1">
+
+<p>how did I choose?</p>
+<p>prefer <em>general solutions</em> to <em>special cases</em></p>
+</section>
+<section class="slide level1">
+
+<p>how did I choose?</p>
+<p>leverage experience to <em>anticipate my next move</em></p>
+<ul>
+<li class="fragment">(but don’t overdo this, see YAGNI)</li>
+</ul>
+</section>
+<section class="slide level1">
+
+<p>how did I choose?</p>
+<p>DRY: pathological abhorrence of repetition</p>
+<ul>
+<li class="fragment">even its subtle forms</li>
+</ul>
+</section>
+<section class="slide level1">
+
+<pre class="sourceCode python"><code class="sourceCode python">&gt;&gt;&gt; <span class="kw">def</span> roman(n):
+...     parts = []
+...     <span class="kw">if</span> n &gt;= <span class="dv">5</span>:
+...         parts.append(<span class="st">&#39;V&#39;</span>)
+...         n -= <span class="dv">5</span>  <span class="co"># n = n - 5</span>
+...     parts.append(<span class="st">&#39;I&#39;</span> * n)
+...     <span class="kw">return</span> <span class="st">&#39;&#39;</span>.join(parts)</code></pre>
+</section>
+<section class="slide level1">
+
+<p>Roman numerals are <em>ordered</em></p>
+</section>
+<section class="slide level1">
+
+<p>∴ each algorithm stage can assume</p>
+<p>prior numerals are <em>already handled</em></p>
+</section>
+<section class="slide level1">
+
+<pre class="sourceCode python"><code class="sourceCode python"><span class="co"># n guaranteed to be between 0 and 4</span>
+parts.append(<span class="st">&#39;I&#39;</span> * n)</code></pre>
+</section>
+<section class="slide level1">
+
+<table>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">49 / 10 = 4</td>
+<td style="text-align: left;">→</td>
+<td style="text-align: left;">4 Xs</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"> </td>
+<td style="text-align: left;">↳</td>
+<td style="text-align: left;">9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>9</strong> / 5 = 1</td>
+<td style="text-align: left;">→</td>
+<td style="text-align: left;">1 V</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">↳</td>
+<td style="text-align: left;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>4</strong> / 1 = 4</td>
+<td style="text-align: left;">→</td>
+<td style="text-align: left;">4 Is</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">↳</td>
+<td style="text-align: left;">0</td>
+</tr>
+</tbody>
+</table>
+<p>/ is integer division</p>
+</section>
+<section class="slide level1">
+
+<pre class="sourceCode python"><code class="sourceCode python">&gt;&gt;&gt; n = <span class="dv">49</span>
+&gt;&gt;&gt; count = n / <span class="dv">10</span>  <span class="co"># how many Xs?</span>
+&gt;&gt;&gt; n = n % <span class="dv">10</span>
+&gt;&gt;&gt; <span class="st">&#39;X&#39;</span> * count
+<span class="co">&#39;XXXX&#39;</span>
+&gt;&gt;&gt; n
+<span class="dv">9</span>
+
+&gt;&gt;&gt; count, n = n / <span class="dv">5</span>, n % <span class="dv">5</span>
+&gt;&gt;&gt; <span class="st">&#39;V&#39;</span> * count
+<span class="co">&#39;V&#39;</span>
+&gt;&gt;&gt; n
+<span class="dv">4</span></code></pre>
+</section>
+<section class="slide level1">
+
+<p>current, 1 ≤ n ≤ 9</p>
+<pre class="sourceCode python"><code class="sourceCode python">&gt;&gt;&gt; <span class="kw">def</span> roman(n):
+...     parts = []
+...     <span class="kw">if</span> n &gt;= <span class="dv">5</span>:
+...         parts.append(<span class="st">&#39;V&#39;</span>)
+...         n -= <span class="dv">5</span>  <span class="co"># n = n - 5</span>
+...     parts.append(<span class="st">&#39;I&#39;</span> * n)
+...     <span class="kw">return</span> <span class="st">&#39;&#39;</span>.join(parts)</code></pre>
+</section>
+<section class="slide level1">
+
+<p>iterative version</p>
+<pre class="sourceCode python"><code class="sourceCode python">&gt;&gt;&gt; numerals = [(<span class="st">&#39;V&#39;</span>, <span class="dv">5</span>), (<span class="st">&#39;I&#39;</span>, <span class="dv">1</span>)]
+&gt;&gt;&gt; <span class="kw">def</span> roman(n):
+...     parts = []
+...     <span class="kw">for</span> numeral, decimal in numerals:
+...         count = n / decimal
+...         parts.append(numeral * count)
+...         n %= decimal
+...     <span class="kw">return</span> <span class="st">&#39;&#39;</span>.join(parts)</code></pre>
+</section>
+<section class="slide level1">
+
+<p>sanity check</p>
+<pre class="sourceCode python"><code class="sourceCode python">&gt;&gt;&gt; <span class="kw">for</span> n in <span class="dt">xrange</span>(<span class="dv">9</span>, <span class="dv">0</span>, -<span class="dv">1</span>):
+...     <span class="dt">print</span> <span class="st">&#39;{}: {}&#39;</span>.<span class="dt">format</span>(n, roman(n))
+<span class="dv">9</span>: VIIII
+<span class="dv">8</span>: VIII
+<span class="dv">7</span>: VII
+<span class="dv">6</span>: VI
+<span class="dv">5</span>: V
+<span class="dv">4</span>: IIII
+<span class="dv">3</span>: III
+<span class="dv">2</span>: II
+<span class="dv">1</span>: I</code></pre>
+</section>
+<section class="slide level1">
+
+<p>X, anyone?</p>
+<pre class="sourceCode python"><code class="sourceCode python">&gt;&gt;&gt; numerals = [(<span class="st">&#39;X&#39;</span>, <span class="dv">10</span>), (<span class="st">&#39;V&#39;</span>, <span class="dv">5</span>), (<span class="st">&#39;I&#39;</span>, <span class="dv">1</span>)]
+&gt;&gt;&gt; <span class="co"># def roman(n) same as before</span>
+
+&gt;&gt;&gt; roman(<span class="dv">49</span>)
+<span class="co">&#39;XXXXVIIII&#39;</span>
+&gt;&gt;&gt; roman(<span class="dv">42</span>)
+<span class="co">&#39;XXXXII&#39;</span>
+&gt;&gt;&gt; roman(<span class="dv">25</span>)
+<span class="co">&#39;XXV&#39;</span>
+&gt;&gt;&gt; roman(<span class="dv">11</span>)
+<span class="co">&#39;XI&#39;</span>
+&gt;&gt;&gt; roman(<span class="dv">6</span>)
+<span class="co">&#39;VI&#39;</span>
+&gt;&gt;&gt; roman(<span class="dv">3</span>)
+<span class="co">&#39;III&#39;</span>
+&gt;&gt;&gt; roman(<span class="dv">1</span>)
+<span class="co">&#39;I&#39;</span></code></pre>
+</section>
+<section class="slide level1">
+
+<p>L: 1–99</p>
+<pre class="sourceCode python"><code class="sourceCode python">&gt;&gt;&gt; numerals = [(<span class="st">&#39;L&#39;</span>, <span class="dv">50</span>), (<span class="st">&#39;X&#39;</span>, <span class="dv">10</span>),
+...             (<span class="st">&#39;V&#39;</span>, <span class="dv">5</span>), (<span class="st">&#39;I&#39;</span>, <span class="dv">1</span>)]
+
+&gt;&gt;&gt; roman(<span class="dv">99</span>)
+<span class="co">&#39;LXXXXVIIII&#39;</span>
+&gt;&gt;&gt; roman(<span class="dv">75</span>)
+<span class="co">&#39;LXXV&#39;</span>
+&gt;&gt;&gt; roman(<span class="dv">51</span>)
+<span class="co">&#39;LI&#39;</span></code></pre>
+</section>
+<section id="v.-while-you-were-bedazzled" class="slide level1">
+<h1>V. While you were bedazzled…</h1>
+<p>we looked at</p>
+</section>
+<section class="slide level1">
+
+<p>Python Features</p>
+<p>data structures: dict, list, tuple, str</p>
+</section>
+<section class="slide level1">
+
+<p>Python Features</p>
+<p>control structures: if, for</p>
+</section>
+<section class="slide level1">
+
+<p>Python Features</p>
+<p>function definitions, parameters, and return statements</p>
+<p>calling functions with arguments</p>
+</section>
+<section class="slide level1">
+
+<p>Python Features</p>
+<p>integer division</p>
+<p>modulus (remainder)</p>
+<p>string multiplication</p>
+<p>Boolean expressions</p>
+<p>string formatting</p>
+<p>list comprehensions</p>
+<p>doctests</p>
+</section>
+<section class="slide level1">
+
+<p>Development thought process</p>
+<p>problem analysis and partitioning</p>
+</section>
+<section class="slide level1">
+
+<p>Development thought process</p>
+<p>assumptions/givens</p>
+<p>domain &amp; range</p>
+</section>
+<section class="slide level1">
+
+<p>Development thought process</p>
+<p>design approach</p>
+<p>iterative refinement</p>
+</section>
+<section class="slide level1">
+
+<p>Development thought process</p>
+<p>design signals and intuitions</p>
+<p>DRY, clarity, complexity,</p>
+<p>extensibility, performance</p>
+</section>
+<section class="slide level1">
+
+<p>Development thought process</p>
+<p>evolution of solution alternatives</p>
+</section>
+<section id="vi.-challenge" class="slide level1">
+<h1>VI. Challenge</h1>
+<p>(don’t give away the answer!)</p>
+</section>
+<section id="challenge" class="slide level1">
+<h1>Challenge</h1>
+<p>Implement <em>subtractive</em> Roman numerals</p>
+<p>e.g. IV, XIX, etc.</p>
+</section>
+<section class="slide level1">
+
+<p>(hint: you <em>don’t need to change the code</em>…)</p>
+</section>
+<section id="brightlink" class="slide level1" data-background="blmark.png" data-background-transition="slide" style="color: #AAA;">
+<h1>BrightLink</h1>
+<p>Help people prove themselves worthy</p>
+<p>↓</p>
+<p>Candidate/credential &amp;</p>
+<p>Performance exam management</p>
+</section>
+<section class="slide level1">
+
+<p>♥</p>
+<p>@drocco007</p>
+</section>
+    </div>
+  </div>
+
+  <script src="reveal.js/lib/js/head.min.js"></script>
+  <script src="reveal.js/js/reveal.min.js"></script>
+  <script src="jquery-1.11.1.min.js"></script>
+  <script src="bigtext.js"></script>
+
+  <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        theme: 'serif', // available themes are in /css/theme
+        transition: 'none', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+//          { src: 'reveal.js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; }, }
+//          { src: 'reveal.js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+]});
+    </script>
+
+    <script>
+    $("section .title").bigtext();
+    setTimeout(function() {
+      $(".bigtext-line0").css("line-height", "150px");
+      $(".bigtext-line1").css("line-height", "225px");
+    }, 250);
+    </script>
+  </body>
+</html>

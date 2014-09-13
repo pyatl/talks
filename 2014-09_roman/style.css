@@ -1,0 +1,45 @@
+body {
+    font-family: cmr10;
+    font-size: 42px;
+}
+
+em {
+    color: #095358;
+}
+
+strong {
+    color: #a34809;
+}
+
+.reveal h1 {
+    font-size: 2.5em;
+}
+
+.reveal code {
+    font-family: "Ubuntu Mono", monospace;
+    font-size: 32px;
+    line-height: 32px;
+}
+
+.reveal ul {
+    list-style: none;
+    margin-left: 0;
+}
+
+.reveal table {
+    margin: 0px auto;
+}
+
+tr.even {
+    color: #a34809;
+}
+
+.reveal table td:not(:last-child) {
+    text-align: right !important;
+}
+
+.reveal .title {
+    margin-bottom: 2em;
+    border-top: 5px double black;
+    border-bottom: 5px double black;
+}
