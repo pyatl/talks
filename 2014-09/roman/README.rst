@@ -2,8 +2,8 @@
 Party Like it's 500BC
 =====================
 
-This talk from the September 2014 meeting of PyAtl covered. We examined
-the thought process developers use to solve problems, including
+This talk from the September 2014 meeting of PyAtl examined the thought
+process developers use to solve problems, including
 
     - decomposition of a problem specification
     - considering tradeoffs among design choices
