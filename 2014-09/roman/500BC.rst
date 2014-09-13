@@ -1,0 +1,934 @@
+.. |br| raw:: html
+
+    <br/>
+
+
+--------------------------
+Party Like It's |br| 500BC
+--------------------------
+
+:author: @drocco007
+:date: 11 VIIII MMXIIII
+
+
+This Talk
+---------
+
+----
+
+build a calculation
+
+
+----
+
+*design and* build a calculation
+
+
+----
+
+*iteratively* design and build a *complex* calculation
+
+
+----
+
+    given a positive integer,
+
+    return its equivalent representation
+
+    in *additive* (ca 500BC) Roman numerals
+
+
+0
+-
+
+* uh…
+* The Romans didn't have a symbol for 0…
+
+
+I!!!
+----
+
+
+----
+
+for small numbers of static conversions,
+
+we could use a *mapping*
+
+
+----
+
+.. code-block:: python
+
+    >>> d_to_r = {
+    ...     1: 'I',
+    ...     8: 'VIII',
+    ...     9: 'VIIII',
+    ...     42: 'XXXXII',
+    ...     2014: 'MMXIIII',
+    ... }
+
+----
+
+.. code-block:: python
+
+    >>> d_to_r[2014]
+    'MMXIIII'
+
+
+----
+
+But we have to know in advance
+
+which numbers we need…
+
+.. code-block:: python
+
+    >>> d_to_r[2015]
+    Traceback (most recent call last):
+        ...
+    KeyError: 2015
+
+
+
+----
+
+so unless you're clairvoyant…
+
+* (if you are clairvoyant…
+
+*   we're hiring! :)
+
+
+----
+
+absent clairvoyance,
+
+this is maintenance tedium
+
+
+II. Alternative
+---------------
+
+*calculate* using an *algorithm*
+
+
+----
+
+*algorithm*
+
+* defined series of steps
+
+  to compute an output
+
+  given some input
+
+
+----
+
+like a *recipe*
+
+
+----
+
+like a recipe, *but automated*!
+
+
+----
+
+    given a positive integer,
+
+    return its equivalent representation
+
+    in *additive* (ca 500BC) Roman numerals
+
+
+III. Iterate
+------------
+
+
+----
+
+simplest case
+
+n = 1
+
+
+----
+
+.. code-block:: python
+
+    >>> def roman(n):
+    ...     return 'I'
+
+    >>> roman(1)
+    'I'
+
+
+----
+
+production ready…
+
+.. image:: random_number.png
+
+* (algorithm courtesy xkcd)
+
+
+----
+
+the I's have it
+
+
+----
+
+handy Python feature: string multiplication!
+
+
+----
+
+(what?!)
+
+
+----
+
+.. code-block:: python
+
+    >>> 'fa' + ' la' * 8
+    'fa la la la la la la la la'
+
+
+----
+
+useful for quickie debugging:
+
+.. code-block:: python
+
+    >>> print '*' * 72
+    ... # bugs go here
+    ************************************************************************
+
+
+----
+
+or for tormenting children:
+
+.. code-block:: python
+
+    >>> 'I must not tell lies. ' * 1000  # doctest: +ELLIPSIS
+    'I must not tell lies. I must not tell lies. I must not tell lies... '
+
+----
+
+and, of course
+
+.. code-block:: python
+
+
+    >>> '' * 1000000000000
+    ''
+
+
+----
+
+notice that if n ≤ 4,
+
+the Roman equivalent is
+
+*n* Is!
+
+
+----
+
+.. code-block:: python
+
+    >>> def roman(n):
+    ...     return 'I' * n
+    >>> roman(4)
+    'IIII'
+
+
+----
+
+nice!
+
+.. code-block:: python
+
+    >>> roman(3)
+    'III'
+    >>> roman(2)
+    'II'
+
+and, to make sure we haven't broken anything,
+
+.. code-block:: python
+
+    >>> roman(1)
+    'I'
+
+
+----
+
+boo!
+
+.. code-block:: python
+
+    >>> print roman(5), '☹'
+    IIIII ☹
+    >>> print roman(10), '―(×_×)→'
+    IIIIIIIIII ―(×_×)→
+
+
+----
+
+5–9
+
+
+----
+
+why here?
+
+
+----
+
+why here?
+
+next logical *class* of cases
+
+
+----
+
+shared features:
+
+    = = ===
+    5 → V
+    6 → VI
+    7 → VII
+    …
+    = = ===
+
+
+----
+
+a *V* followed by
+
+some number of **I**s
+
+    = = =========
+    5 → *V*
+    6 → *V*\ **I**
+    7 → *V*\ **II**
+    …
+    = = =========
+
+
+----
+
+.. code-block:: python
+
+    >>> def roman(n):
+    ...     return 'V' + 'I' * (n - 5)
+    >>> roman(7)
+    'VII'
+
+
+----
+
+but…
+
+.. code-block:: python
+
+    >>> roman(4)
+    'V'
+
+
+----
+
+that's a *regression*
+
+
+----
+
+*regression*:
+
+specific kind of bug
+
+
+----
+
+regression:
+
+when the *addition* of a new feature
+
+or *extension* of an existing one
+
+breaks **existing behavior**
+
+
+IIII. Design Options
+--------------------
+
+
+----
+
+problem contours, experience,
+
+language idiom, tools
+
+↓
+
+*solution*
+
+
+----
+
+.. code-block:: python
+
+    >>> def roman(n):
+    ...     if n >= 5:
+    ...         return 'V' + 'I' * (n - 5)
+    ...     else:
+    ...         return 'I' * n
+
+
+----
+
+this solution approaches the problem
+
+from the *decimal* side of the equation
+
+
+----
+
+    given an integer *n*,
+
+    how do I turn it into Roman numerals?
+
+
+----
+
+code smell: *repetition*
+
+
+----
+
+.. code-block:: python
+
+    >>> def roman(n):
+    ...     if n >= 5:
+    ...         return 'V' + 'I' * (n - 5)
+    ...     else:
+    ...         return 'I' * n
+
+
+notice that the V case
+
+is also worrying about the I case
+
+----
+
+what if we refocused on the
+
+*numeral* side of the problem?
+
+
+----
+
+    for each Roman numeral,
+
+    how many are needed to represent an integer *n*?
+
+
+----
+
+.. code-block:: python
+
+    >>> def roman(n):
+    ...     parts = []
+    ...     if n >= 5:
+    ...         parts.append('V')
+    ...         n -= 5  # n = n - 5
+    ...     parts.append('I' * n)
+    ...     return ''.join(parts)
+
+
+----
+
+.. code-block:: python
+
+    >>> roman(9)
+    'VIIII'
+    >>> roman(7)
+    'VII'
+    >>> roman(5)
+    'V'
+    >>> roman(4)
+    'IIII'
+    >>> roman(1)
+    'I'
+
+
+
+----
+
+we are going to assemble the result
+
+from a list of parts
+
+.. code-block:: python
+
+    parts = []
+
+
+----
+
+why?
+
+because we *don't know in advance*
+
+how many numerals we need
+
+
+----
+
+the V case
+
+.. code-block:: python
+
+    # if we need one,
+    if n >= 5:
+
+        # save a V to the result
+        parts.append('V')
+
+        # mark that part of the input as handled
+        n -= 5
+
+
+----
+
+the I case
+
+.. code-block:: python
+
+    # n guaranteed to be between 0 and 4
+    parts.append('I' * n)
+
+
+----
+
+assemble the parts and return
+
+.. code-block:: python
+
+    # join the parts with the empty string (nothing)
+    # between them
+    return ''.join(parts)
+
+
+----
+
+.. code-block:: python
+
+    >>> def roman(n):
+    ...     parts = []
+    ...     if n >= 5:
+    ...         parts.append('V')
+    ...         n -= 5  # n = n - 5
+    ...     parts.append('I' * n)
+    ...     return ''.join(parts)
+
+
+----
+
+this is the *art* of programming
+
+
+----
+
+problem contours, experience,
+
+language idiom, tools
+
+↓
+
+?
+
+↙  ↘
+
+A        B
+
+
+----
+
+both solutions are *correct*
+
+over their input range
+
+
+----
+
+which is more
+
+* readable
+* maintainable
+* extensible
+
+
+----
+
+    There is no model that is natural to all contexts!
+
+    —Uncle Bob Martin
+
+
+----
+
+* there is no “right answer”
+* the choice is not objective
+
+
+----
+
+informed by
+
+problem contours, experience,
+
+language idiom, tools
+
+
+----
+
+    Since closure cannot be complete, it must be strategic. This takes
+    a certain amount of prescience derived from experience.
+
+    —Uncle Bob Martin
+
+
+----
+
+this is why it's important to
+
+
+----
+
+never stop learning
+
+
+----
+
+how did I choose?
+
+
+----
+
+how did I choose?
+
+prefer *general solutions* to *special cases*
+
+
+----
+
+how did I choose?
+
+leverage experience to *anticipate my next move*
+
+* (but don't overdo this, see YAGNI)
+
+
+----
+
+how did I choose?
+
+DRY: pathological abhorrence of repetition
+
+* even its subtle forms
+
+
+----
+
+.. code-block:: python
+
+    >>> def roman(n):
+    ...     parts = []
+    ...     if n >= 5:
+    ...         parts.append('V')
+    ...         n -= 5  # n = n - 5
+    ...     parts.append('I' * n)
+    ...     return ''.join(parts)
+
+
+----
+
+Roman numerals are *ordered*
+
+
+----
+
+∴ each algorithm stage can assume
+
+prior numerals are *already handled*
+
+
+----
+
+.. code-block:: python
+
+    # n guaranteed to be between 0 and 4
+    parts.append('I' * n)
+
+
+----
+
+.. class:: thingy
+
+============== = =====
+49 / 10    = 4 → 4 Xs
+               ↳  9
+
+ **9** / 5 = 1 → 1 V
+               ↳ 4
+
+ **4** / 1 = 4 → 4 Is
+               ↳ 0
+============== = =====
+
+/ is integer division
+
+----
+
+.. code-block:: python
+
+    >>> n = 49
+    >>> count = n / 10  # how many Xs?
+    >>> n = n % 10
+    >>> 'X' * count
+    'XXXX'
+    >>> n
+    9
+
+    >>> count, n = n / 5, n % 5
+    >>> 'V' * count
+    'V'
+    >>> n
+    4
+
+
+----
+
+current, 1 ≤ n ≤ 9
+
+.. code-block:: python
+
+    >>> def roman(n):
+    ...     parts = []
+    ...     if n >= 5:
+    ...         parts.append('V')
+    ...         n -= 5  # n = n - 5
+    ...     parts.append('I' * n)
+    ...     return ''.join(parts)
+
+----
+
+iterative version
+
+.. code-block:: python
+
+    >>> numerals = [('V', 5), ('I', 1)]
+    >>> def roman(n):
+    ...     parts = []
+    ...     for numeral, decimal in numerals:
+    ...         count = n / decimal
+    ...         parts.append(numeral * count)
+    ...         n %= decimal
+    ...     return ''.join(parts)
+
+----
+
+sanity check
+
+.. code-block:: python
+
+    >>> for n in xrange(9, 0, -1):
+    ...     print '{}: {}'.format(n, roman(n))
+    9: VIIII
+    8: VIII
+    7: VII
+    6: VI
+    5: V
+    4: IIII
+    3: III
+    2: II
+    1: I
+
+
+----
+
+X, anyone?
+
+.. code-block:: python
+
+    >>> numerals = [('X', 10), ('V', 5), ('I', 1)]
+    >>> # def roman(n) same as before
+
+    >>> roman(49)
+    'XXXXVIIII'
+    >>> roman(42)
+    'XXXXII'
+    >>> roman(25)
+    'XXV'
+    >>> roman(11)
+    'XI'
+    >>> roman(6)
+    'VI'
+    >>> roman(3)
+    'III'
+    >>> roman(1)
+    'I'
+
+
+----
+
+L: 1–99
+
+.. code-block:: python
+
+    >>> numerals = [('L', 50), ('X', 10),
+    ...             ('V', 5), ('I', 1)]
+
+    >>> roman(99)
+    'LXXXXVIIII'
+    >>> roman(75)
+    'LXXV'
+    >>> roman(51)
+    'LI'
+
+
+V. While you were bedazzled…
+----------------------------
+
+we looked at
+
+
+----
+
+Python Features
+
+data structures: dict, list, tuple, str
+
+
+----
+
+Python Features
+
+control structures: if, for
+
+
+----
+
+Python Features
+
+function definitions, parameters, and return statements
+
+calling functions with arguments
+
+
+----
+
+Python Features
+
+integer division
+
+modulus (remainder)
+
+string multiplication
+
+Boolean expressions
+
+string formatting
+
+list comprehensions
+
+doctests
+
+
+----
+
+Development thought process
+
+problem analysis and partitioning
+
+
+
+----
+
+Development thought process
+
+assumptions/givens
+
+domain & range
+
+
+----
+
+Development thought process
+
+design approach
+
+iterative refinement
+
+
+----
+
+Development thought process
+
+design signals and intuitions
+
+DRY, clarity, complexity,
+
+extensibility, performance
+
+
+----
+
+Development thought process
+
+evolution of solution alternatives
+
+
+VI. Challenge
+-------------
+
+(don't give away the answer!)
+
+
+
+Challenge
+---------
+
+Implement *subtractive* Roman numerals
+
+e.g. IV, XIX, etc.
+
+
+----
+
+(hint: you *don't need to change the code*…)
+
+
+BrightLink
+----------
+
+Help people prove themselves worthy
+
+↓
+
+Candidate/credential &
+
+Performance exam management
+
+
+----
+
+♥
+
+@drocco007
