@@ -1,0 +1,1246 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.12: http://docutils.sourceforge.net/" />
+<title></title>
+<link rel="stylesheet" href="static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="static/slides2.css" type="text/css" />
+</head>
+<body class="reading-mode">
+<div class="document">
+
+
+<div class="bigtext section" id="from-rome-br-to-england">
+<h1>From Rome → <br/> ← to England</h1>
+<p>&#64;drocco007</p>
+<p><a class="reference external" href="https://github.com/drocco007/pyatl-english-numerals">source &amp; instructions</a></p>
+</div>
+<div class="section" id="last-time">
+<h1>Last Time</h1>
+</div>
+<div class="section" id="slide">
+
+<div class="line-block">
+<div class="line"><em>iteratively</em> design and build a</div>
+<div class="line"><em>complex</em> calculation</div>
+</div>
+</div>
+<div class="section" id="id1">
+
+<div class="line-block">
+<div class="line">given a positive integer,</div>
+<div class="line">return its equivalent representation</div>
+<div class="line">in <em>additive</em> (ca 500BC) Roman numerals</div>
+</div>
+</div>
+<div class="section" id="id2">
+
+<pre class="code python literal-block">
+<span class="o">&gt;&gt;&gt;</span> <span class="n">numerals</span> <span class="o">=</span> <span class="p">[(</span><span class="s">'D'</span><span class="p">,</span> <span class="mi">500</span><span class="p">),</span> <span class="p">(</span><span class="s">'C'</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>  <span class="c"># etc.</span>
+<span class="o">...</span>             <span class="p">(</span><span class="s">'L'</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span> <span class="p">(</span><span class="s">'X'</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+<span class="o">...</span>             <span class="p">(</span><span class="s">'V'</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="s">'I'</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">roman</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<span class="o">...</span>     <span class="n">parts</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="o">...</span>     <span class="k">for</span> <span class="n">numeral</span><span class="p">,</span> <span class="n">decimal</span> <span class="ow">in</span> <span class="n">numerals</span><span class="p">:</span>
+<span class="o">...</span>         <span class="n">count</span> <span class="o">=</span> <span class="n">n</span> <span class="o">/</span> <span class="n">decimal</span>
+<span class="o">...</span>         <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numeral</span> <span class="o">*</span> <span class="n">count</span><span class="p">)</span>
+<span class="o">...</span>         <span class="n">n</span> <span class="o">%=</span> <span class="n">decimal</span>
+<span class="o">...</span>     <span class="k">return</span> <span class="s">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="id3">
+
+<pre class="code python literal-block">
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span> <span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">roman</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span>
+<span class="o">...</span>                 <span class="p">(</span><span class="mi">99</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="mi">51</span><span class="p">,</span> <span class="mi">49</span><span class="p">,</span> <span class="mi">42</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">11</span><span class="p">))</span>
+<span class="n">LXXXXVIIII</span>
+<span class="n">LXXV</span>
+<span class="n">LI</span>
+<span class="n">XXXXVIIII</span>
+<span class="n">XXXXII</span>
+<span class="n">XXV</span>
+<span class="n">XI</span>
+</pre>
+</div>
+<div class="section" id="id4">
+
+<p><em>problem solving</em></p>
+</div>
+<div class="section" id="id5">
+
+<p>problem solving</p>
+<p>how developers <em>approach</em> problems</p>
+</div>
+<div class="section" id="id6">
+
+<p>problem solving</p>
+<p>how developers <em>design</em> solutions</p>
+</div>
+<div class="section" id="id7">
+
+<p>problem solving</p>
+<p>how developers <em>implement</em> software</p>
+</div>
+<div class="section" id="id8">
+
+<p>prefer <em>general solutions</em></p>
+<p>to <strong>special cases</strong></p>
+</div>
+<div class="section" id="id9">
+
+<p>leverage experience</p>
+<p>to <em>anticipate next move</em></p>
+</div>
+<div class="section" id="id10">
+
+<p>DRY: pathological abhorrence of <strong>repetition</strong></p>
+</div>
+<div class="section" id="id11">
+
+<p>prefer <em>readability</em></p>
+</div>
+<div class="section" id="id12">
+
+<p><em>maintainability</em></p>
+</div>
+<div class="section" id="id13">
+
+<p><em>extensibility</em></p>
+</div>
+<div class="section" id="the-art-of-programming">
+<h1>The <em>Art</em> of Programming</h1>
+<p>problem contours, experience, language idiom, tools</p>
+<p>↓</p>
+<p>?</p>
+<p>↙&nbsp;&nbsp;↘</p>
+<p>A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B</p>
+</div>
+<div class="section" id="this-time">
+<h1>This Time</h1>
+</div>
+<div class="section" id="id14">
+
+<div class="line-block">
+<div class="line">given a positive integer,</div>
+<div class="line">return its equivalent representation</div>
+<div class="line">in <em>English numerals</em></div>
+</div>
+</div>
+<div class="section" id="id15">
+<h1>?</h1>
+<pre class="code python literal-block">
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">english_number</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<span class="o">...</span>     <span class="k">return</span> <span class="s">'zero'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">english_number</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="s">'zero'</span>
+</pre>
+</div>
+<div class="section" id="id16">
+
+<p>similar problem to Roman</p>
+</div>
+<div class="section" id="id17">
+
+<p>similar problem to Roman,<br/>
+but <em>more complicated</em></p>
+</div>
+<div class="section" id="why">
+<h1>Why?</h1>
+</div>
+<div class="section" id="id18">
+
+<p>Roman numerals are <em>regular</em></p>
+</div>
+<div class="section" id="id19">
+
+<div class="line-block">
+<div class="line">one <strong>rule</strong> to rule them all</div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="id20">
+
+<div class="line-block">
+<div class="line">one <strong>rule</strong> to rule them all</div>
+<div class="line"><br /></div>
+<div class="line">(ahem…)</div>
+</div>
+</div>
+<div class="section" id="id21">
+<h1>123</h1>
+</div>
+<div class="section" id="id22">
+<h1>123</h1>
+<pre class="code python literal-block">
+<span class="o">&gt;&gt;&gt;</span> <span class="n">roman</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="s">'CXXIII'</span>
+</pre>
+</div>
+<div class="section" id="id23">
+
+<p>English numerals are <em>irregular</em></p>
+</div>
+<div class="section" id="id24">
+<h1>123</h1>
+</div>
+<div class="section" id="id25">
+<h1>123</h1>
+<p>one hundred twenty-three</p>
+</div>
+<div class="section" id="id26">
+<h1>123</h1>
+<p><em>units used throughout</em></p>
+<p><strong>one</strong> hundred twenty-<strong>three</strong></p>
+</div>
+<div class="section" id="id27">
+<h1>123</h1>
+<p><em>two different separators</em></p>
+<p>one<strong>␣</strong>hundred<strong>␣</strong>twenty<strong>⊟</strong>three</p>
+</div>
+<div class="section" id="id28">
+<h1>123</h1>
+<p><em>special names for teens &amp; tens</em></p>
+<p>one hundred <strong>twenty</strong>-three</p>
+</div>
+<div class="section" id="id29">
+<h1>123</h1>
+<p>(<strong>not</strong> one hundred <em>two tens</em> three)</p>
+</div>
+<div class="section" id="id30">
+<h1>123</h1>
+<p>explicit <em>place name</em> vs. <em>not</em></p>
+<p>one <strong>hundred</strong> twenty<strong>☼</strong>-three <strong>☼</strong></p>
+</div>
+<div class="section" id="id31">
+
+<p>more complicated…</p>
+</div>
+<div class="section" id="id32">
+
+<p>iterative development is a <em>tool</em></p>
+<p>we use to <strong>manage complexity</strong></p>
+</div>
+<div class="section" id="id33">
+
+<p>iterative development:</p>
+<p>start small &amp; simple</p>
+</div>
+<div class="section" id="id34">
+
+<p>iterative development:</p>
+<p>start small, refine</p>
+</div>
+<div class="section" id="id35">
+
+<p>iterative development:</p>
+<p>start small, refine, and test</p>
+</div>
+<div class="section" id="why-tests">
+<h1>Why tests?</h1>
+</div>
+<div class="section" id="id36">
+
+<p>testing is less about</p>
+<p><strong>correctness</strong></p>
+</div>
+<div class="section" id="id37">
+
+<p>testing is more about</p>
+<p><em>confidence &amp; creativity</em></p>
+</div>
+<div class="section" id="id38">
+
+<p>tests help you</p>
+<p><em>define and measure progress</em></p>
+</div>
+<div class="section" id="id39">
+
+<p>tests let you</p>
+<p><em>explore and create</em></p>
+</div>
+<div class="section" id="id40">
+
+<p>tests give you the</p>
+<p><em>confidence</em></p>
+<p>to work quickly and efficiently</p>
+</div>
+<div class="section" id="where-to-begin">
+<h1>Where to Begin?</h1>
+</div>
+<div class="section" id="id41">
+
+<pre class="code python literal-block">
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">english_number</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<span class="o">...</span>     <span class="k">return</span> <span class="s">'zero'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">english_number</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="s">'zero'</span>
+</pre>
+</div>
+<div class="section" id="id42">
+
+<p>define progress by</p>
+<p><em>writing a test</em></p>
+<p>for it!</p>
+</div>
+<div class="section" id="id43">
+
+<pre class="code python literal-block">
+<span class="k">def</span> <span class="nf">test_one</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="s">'one'</span> <span class="o">==</span> <span class="n">english_number</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="id44">
+
+<p>progress</p>
+</div>
+<div class="section" id="id45">
+
+<p>progress:</p>
+<p>handling <cite>1</cite></p>
+</div>
+<div class="section" id="id46">
+
+<p>progress:</p>
+<p>handling <cite>1</cite> <em>without breaking</em> <cite>0</cite></p>
+</div>
+<div class="section" id="id47">
+
+<pre class="code literal-block">
+$ py.test -qx
+.F
+=================== FAILURES ===================
+___________________ test_one ___________________
+
+    def test_one():
+&gt;       assert 'one' == english_number(1)
+E       assert 'one' == 'zero'
+E         - one
+E         + zero
+
+test_english.py:8: AssertionError
+!!!! Interrupted: stopping after 1 failures !!!!
+1 failed, 1 passed in 0.03 seconds
+</pre>
+</div>
+<div class="section" id="nope">
+<h1>Nope</h1>
+<pre class="code python literal-block">
+<span class="k">def</span> <span class="nf">english_number</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s">'one'</span>
+</pre>
+<pre class="literal-block">
+$ py.test -qx
+F
+1 failed in 0.03 seconds
+</pre>
+</div>
+<div class="section" id="id48">
+
+<pre class="code python literal-block">
+<span class="k">def</span> <span class="nf">english_number</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">n</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s">'one'</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s">'zero'</span>
+</pre>
+<pre class="literal-block">
+$ py.test -qx
+..
+2 passed in 0.01 seconds
+</pre>
+</div>
+<div class="section" id="id49">
+
+<p>you will be</p>
+<p><strong>tempted</strong></p>
+<p>to work “faster” than this</p>
+</div>
+<div class="section" id="id50">
+
+<p>the <em>further</em> you <strong>stretch</strong></p>
+<p>the <em>more ground</em> you’ll have to</p>
+</div>
+<div class="section" id="id51">
+
+<p><strong>retrace</strong></p>
+</div>
+<div class="section" id="id52">
+
+<p>when something goes wrong</p>
+</div>
+<div class="section" id="id53">
+
+<p>and the</p>
+<p><strong>harder</strong></p>
+<p>that retracing will be</p>
+</div>
+<div class="section" id="id54">
+
+<p>(which doesn’t sound</p>
+<p><strong>faster</strong></p>
+<p>to me ;)</p>
+</div>
+<div class="section" id="id55">
+
+<p>knowing how far you</p>
+<p>can stretch</p>
+</div>
+<div class="section" id="id56">
+
+<p>knowing how much</p>
+<p>stretching is wise</p>
+</div>
+<div class="section" id="id57">
+
+<p>the <em>art</em> of programming</p>
+</div>
+<div class="section" id="what-s-next">
+<h1>What’s next?</h1>
+</div>
+<div class="section" id="id58">
+
+<p>single digits</p>
+</div>
+<div class="section" id="id59">
+
+<p>problem countours</p>
+</div>
+<div class="section" id="id60">
+
+<p><em>direct</em> mapping between</p>
+<p>digit and numeral</p>
+</div>
+<div class="section" id="id61">
+
+<table border="1" class="docutils">
+<colgroup>
+<col width="33%" />
+<col width="67%" />
+</colgroup>
+<tbody valign="top">
+<tr><td>0</td>
+<td>zero</td>
+</tr>
+<tr><td>1</td>
+<td>one</td>
+</tr>
+<tr><td>2</td>
+<td>two</td>
+</tr>
+<tr><td>⋮</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id62">
+
+<p>Python has a <em>data structure</em> for that!</p>
+</div>
+<div class="section" id="id63">
+
+<p><strong>list</strong></p>
+</div>
+<div class="section" id="id64">
+
+<pre class="code python literal-block">
+<span class="o">&gt;&gt;&gt;</span> <span class="n">ones</span> <span class="o">=</span> <span class="p">[</span><span class="s">'zero'</span><span class="p">,</span> <span class="s">'one'</span><span class="p">,</span> <span class="s">'two'</span><span class="p">,</span> <span class="s">'three'</span><span class="p">,</span> <span class="s">'four'</span><span class="p">,</span>
+<span class="o">...</span>         <span class="s">'five'</span><span class="p">,</span> <span class="s">'six'</span><span class="p">,</span> <span class="s">'seven'</span><span class="p">,</span> <span class="s">'eight'</span><span class="p">,</span> <span class="s">'nine'</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">english_number</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<span class="o">...</span>     <span class="k">return</span> <span class="n">ones</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+</pre>
+</div>
+<div class="section" id="id65">
+
+<pre class="code python literal-block">
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span> <span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">english_number</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="o">...</span>                 <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">zero</span>
+<span class="n">one</span>
+<span class="n">two</span>
+<span class="n">three</span>
+<span class="n">four</span>
+<span class="n">five</span>
+<span class="n">six</span>
+<span class="n">seven</span>
+<span class="n">eight</span>
+<span class="n">nine</span>
+</pre>
+</div>
+<div class="section" id="id66">
+
+<table border="1" class="docutils">
+<colgroup>
+<col width="38%" />
+<col width="62%" />
+</colgroup>
+<tbody valign="top">
+<tr><td>0</td>
+<td>zero</td>
+</tr>
+<tr><td>1</td>
+<td>one</td>
+</tr>
+<tr><td>⋮</td>
+<td>&nbsp;</td>
+</tr>
+<tr><td>10</td>
+<td>ten</td>
+</tr>
+<tr><td>11</td>
+<td>eleven</td>
+</tr>
+<tr><td>⋮</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id67">
+
+<pre class="code python literal-block">
+<span class="o">&gt;&gt;&gt;</span> <span class="n">ones_tens</span> <span class="o">=</span> <span class="p">[</span><span class="s">'zero'</span><span class="p">,</span> <span class="s">'one'</span><span class="p">,</span> <span class="s">'two'</span><span class="p">,</span> <span class="s">'three'</span><span class="p">,</span>
+<span class="o">...</span>              <span class="s">'four'</span><span class="p">,</span> <span class="s">'five'</span><span class="p">,</span> <span class="s">'six'</span><span class="p">,</span> <span class="s">'seven'</span><span class="p">,</span>
+<span class="o">...</span>              <span class="s">'eight'</span><span class="p">,</span> <span class="s">'nine'</span><span class="p">,</span> <span class="s">'ten'</span><span class="p">,</span> <span class="s">'eleven'</span><span class="p">,</span>
+<span class="o">...</span>              <span class="s">'twelve'</span><span class="p">,</span> <span class="s">'thirteen'</span><span class="p">,</span> <span class="s">'fourteen'</span><span class="p">,</span>
+<span class="o">...</span>              <span class="s">'fifteen'</span><span class="p">,</span> <span class="s">'sixteen'</span><span class="p">,</span> <span class="s">'seventeen'</span><span class="p">,</span>
+<span class="o">...</span>              <span class="s">'eighteen'</span><span class="p">,</span> <span class="s">'nineteen'</span><span class="p">,</span> <span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">english_number</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<span class="o">...</span>     <span class="k">return</span> <span class="n">ones_tens</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+</pre>
+</div>
+<div class="section" id="id68">
+
+<pre class="code python literal-block">
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span> <span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">english_number</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="o">...</span>                 <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
+<span class="n">ten</span>
+<span class="n">eleven</span>
+<span class="n">twelve</span>
+<span class="n">thirteen</span>
+<span class="n">fourteen</span>
+<span class="n">fifteen</span>
+<span class="n">sixteen</span>
+<span class="n">seventeen</span>
+<span class="n">eighteen</span>
+<span class="n">nineteen</span>
+</pre>
+</div>
+<div class="section" id="so-much-for-the-easy-part">
+<h1>So Much for the Easy Part…</h1>
+</div>
+<div class="section" id="twenties">
+<h1>Twenties</h1>
+</div>
+<div class="section" id="id69">
+
+<p>continue in same vein…</p>
+</div>
+<div class="section" id="id70">
+
+<pre class="code python literal-block">
+<span class="o">&gt;&gt;&gt;</span> <span class="n">ones_tens</span> <span class="o">=</span> <span class="p">[</span><span class="s">'zero'</span><span class="p">,</span> <span class="s">'one'</span><span class="p">,</span> <span class="s">'two'</span><span class="p">,</span> <span class="s">'three'</span><span class="p">,</span>
+<span class="o">...</span>              <span class="c"># ...</span>
+<span class="o">...</span>              <span class="s">'eighteen'</span><span class="p">,</span> <span class="s">'nineteen'</span><span class="p">,</span> <span class="s">'twenty'</span><span class="p">,</span>
+<span class="o">...</span>              <span class="s">'twenty-one'</span><span class="p">,</span> <span class="s">'twenty-two'</span><span class="p">,</span> <span class="p">]</span>
+</pre>
+</div>
+<div class="section" id="id71">
+
+<p>(this is going to end badly…)</p>
+</div>
+<div class="section" id="id72">
+
+<p>but notice…</p>
+</div>
+<div class="section" id="id73">
+
+<p>result composed of a</p>
+<p><em>tens</em> numeral and a</p>
+<p><strong>ones</strong> numeral</p>
+</div>
+<div class="section" id="id74">
+
+<p><em>twenty</em>-<strong>three</strong></p>
+</div>
+<div class="section" id="id75">
+
+<p>so, in general,</p>
+</div>
+<div class="section" id="id76">
+
+<p><em>tens numeral</em> + <tt class="docutils literal"><span class="pre">'-'</span></tt> + <strong>ones numeral</strong></p>
+</div>
+<div class="section" id="id77">
+
+<p>we <em>already have</em> a solution</p>
+<p>for the ones…</p>
+</div>
+<div class="section" id="id78">
+
+<pre class="code python literal-block">
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">english_number</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<span class="o">...</span>     <span class="k">return</span> <span class="n">ones_tens</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+</pre>
+</div>
+<div class="section" id="id79">
+
+<p>so we <em>refine</em></p>
+</div>
+<div class="section" id="refine">
+<h1>Refine</h1>
+<p>define progress</p>
+</div>
+<div class="section" id="id80">
+<h1>Refine</h1>
+<p>define progress, construct solution</p>
+</div>
+<div class="section" id="progress">
+<h1>Progress</h1>
+<p>tests for the twenties cases</p>
+</div>
+<div class="section" id="detour">
+<h1>Detour</h1>
+<p>Python has great tools for</p>
+<p><em>efficient</em> testing</p>
+</div>
+<div class="section" id="id81">
+
+<pre class="code python literal-block">
+<span class="nd">&#64;pytest.mark.parametrize</span><span class="p">(</span><span class="s">'n, english'</span><span class="p">,</span>
+    <span class="p">[(</span><span class="mi">23</span><span class="p">,</span> <span class="s">'twenty-three'</span><span class="p">),</span>
+     <span class="p">(</span><span class="mi">24</span><span class="p">,</span> <span class="s">'twenty-four'</span><span class="p">),</span>
+     <span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="s">'twenty-five'</span><span class="p">),</span>
+     <span class="p">(</span><span class="mi">26</span><span class="p">,</span> <span class="s">'twenty-six'</span><span class="p">),</span>
+     <span class="p">(</span><span class="mi">27</span><span class="p">,</span> <span class="s">'twenty-seven'</span><span class="p">),</span>
+     <span class="p">(</span><span class="mi">28</span><span class="p">,</span> <span class="s">'twenty-eight'</span><span class="p">),</span>
+     <span class="p">(</span><span class="mi">29</span><span class="p">,</span> <span class="s">'twenty-nine'</span><span class="p">)]</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_twenties</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">english</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">english</span> <span class="o">==</span> <span class="n">english_number</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="id82">
+
+<p>(uhm…)</p>
+</div>
+<div class="section" id="id83">
+
+<p>“Make me a bunch of tests…”</p>
+<pre class="code python literal-block">
+<span class="nd">&#64;pytest.mark.parametrize</span>
+</pre>
+</div>
+<div class="section" id="id84">
+
+<p>“…each taking an integer <tt class="docutils literal">n</tt> and an English equivalent <tt class="docutils literal">english</tt>…”</p>
+<pre class="code python literal-block">
+<span class="nd">&#64;pytest.mark.parametrize</span><span class="p">(</span><span class="s">'n, english'</span><span class="p">,</span>
+</pre>
+</div>
+<div class="section" id="id85">
+
+<div class="line-block">
+<div class="line">“…each of which checks the</div>
+<div class="line"><em>input</em> <tt class="docutils literal">n</tt> against the</div>
+<div class="line"><strong>result</strong> <tt class="docutils literal">english</tt>…”</div>
+</div>
+<pre class="code python literal-block">
+<span class="nd">&#64;pytest.mark.parametrize</span><span class="p">(</span><span class="s">'n, english'</span><span class="p">,</span> <span class="err">…</span> <span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_twenties</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">english</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">english</span> <span class="o">==</span> <span class="n">english_number</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="id86">
+
+<p>“…and here’s the data!”</p>
+<pre class="code python literal-block">
+<span class="nd">&#64;pytest.mark.parametrize</span><span class="p">(</span><span class="s">'n, english'</span><span class="p">,</span>
+    <span class="p">[(</span><span class="mi">23</span><span class="p">,</span> <span class="s">'twenty-three'</span><span class="p">),</span>
+     <span class="p">(</span><span class="mi">24</span><span class="p">,</span> <span class="s">'twenty-four'</span><span class="p">),</span>
+     <span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="s">'twenty-five'</span><span class="p">),</span>
+     <span class="p">(</span><span class="mi">26</span><span class="p">,</span> <span class="s">'twenty-six'</span><span class="p">),</span>
+     <span class="p">(</span><span class="mi">27</span><span class="p">,</span> <span class="s">'twenty-seven'</span><span class="p">),</span>
+     <span class="p">(</span><span class="mi">28</span><span class="p">,</span> <span class="s">'twenty-eight'</span><span class="p">),</span>
+     <span class="p">(</span><span class="mi">29</span><span class="p">,</span> <span class="s">'twenty-nine'</span><span class="p">)]</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">test_twenties</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">english</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">english</span> <span class="o">==</span> <span class="n">english_number</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="id87">
+
+<pre class="code python literal-block">
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">english_number</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<span class="o">...</span>     <span class="k">return</span> <span class="n">ones_tens</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+</pre>
+</div>
+<div class="section" id="id88">
+
+<pre class="literal-block">
+$ py.test -qx
+....................F
+1 failed, 20 passed in 0.06 seconds
+</pre>
+</div>
+<div class="section" id="id89">
+
+<pre class="code python literal-block">
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">english_number</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<span class="o">...</span>     <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;=</span> <span class="mi">20</span><span class="p">:</span>
+<span class="o">...</span>         <span class="k">return</span> <span class="s">'twenty'</span>
+<span class="o">...</span>     <span class="k">else</span><span class="p">:</span>
+<span class="o">...</span>         <span class="k">return</span> <span class="n">ones_tens</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+</pre>
+</div>
+<div class="section" id="id90">
+
+<pre class="literal-block">
+$ py.test -qx
+.....................F
+=================== FAILURES ===================
+_______________ test_twenty_one ________________
+
+    def test_twenty_one():
+&gt;       assert 'twenty-one' == english_number(21)
+E       assert 'twenty-one' == 'twenty'
+E         - twenty-one
+E         ?       ----
+E         + twenty
+
+test_english.py:49: AssertionError
+!!!! Interrupted: stopping after 1 failures !!!!
+1 failed, 21 passed in 0.06 seconds
+</pre>
+</div>
+<div class="section" id="id91">
+
+<p><em>progress</em></p>
+</div>
+<div class="section" id="id92">
+
+<p>How do we handle the <em>ones</em>?</p>
+</div>
+<div class="section" id="id93">
+
+<p>Does anything about this look…</p>
+</div>
+<div class="section" id="id94">
+
+<p><em>familiar</em></p>
+</div>
+<div class="section" id="id95">
+
+<pre class="code python literal-block">
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">roman</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<span class="o">...</span>     <span class="n">parts</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="o">...</span>     <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="p">:</span>
+<span class="o">...</span>         <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">'V'</span><span class="p">)</span>
+<span class="o">...</span>         <span class="n">n</span> <span class="o">-=</span> <span class="mi">5</span>  <span class="c"># n = n - 5</span>
+<span class="o">...</span>     <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">'I'</span> <span class="o">*</span> <span class="n">n</span><span class="p">)</span>
+<span class="o">...</span>     <span class="k">return</span> <span class="s">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="id96">
+
+<p>We need to</p>
+<p>check for a <em>twenty</em></p>
+</div>
+<div class="section" id="id97">
+
+<p>We need to</p>
+<p>add it to the <em>result</em></p>
+</div>
+<div class="section" id="id98">
+
+<p>We need to</p>
+<p><em>remove</em> it from <tt class="docutils literal">n</tt></p>
+</div>
+<div class="section" id="id99">
+
+<p>We need to</p>
+<p>let the <em>ones</em> code do its thing</p>
+</div>
+<div class="section" id="id100">
+
+<pre class="code python literal-block">
+<span class="k">def</span> <span class="nf">english_number</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c"># check for a twenty</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;=</span> <span class="mi">20</span><span class="p">:</span>
+
+        <span class="c"># add it to the result</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">'twenty'</span><span class="p">)</span>
+
+        <span class="c"># remove it from n</span>
+        <span class="n">n</span> <span class="o">%=</span> <span class="mi">20</span>
+
+    <span class="c"># handle the ones</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ones_tens</span><span class="p">[</span><span class="n">n</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="s">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="id101">
+
+<p>Think it’ll work?</p>
+</div>
+<div class="section" id="id102">
+
+<pre class="literal-block">
+$ py.test -qx
+....................F
+=================== FAILURES ===================
+_________________ test_twenty __________________
+
+    def test_twenty():
+&gt;       assert 'twenty' == english_number(20)
+E       assert 'twenty' == 'twentyzero'
+E         - twenty
+E         + twentyzero
+E         ?       ++++
+
+test_english.py:45: AssertionError
+!!!! Interrupted: stopping after 1 failures !!!!
+1 failed, 20 passed in 0.06 seconds
+</pre>
+</div>
+<div class="section" id="twentyzero">
+<h1><strong>Twentyzero??!?!?</strong></h1>
+</div>
+<div class="section" id="id103">
+
+<p>Hmm. I guess we should not</p>
+<p>handle the ones if there</p>
+<p>aren’t any…</p>
+</div>
+<div class="section" id="id104">
+
+<pre class="code python literal-block">
+<span class="k">def</span> <span class="nf">english_number</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c"># check for a twenty</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;=</span> <span class="mi">20</span><span class="p">:</span>
+
+        <span class="c"># add it to the result</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">'twenty'</span><span class="p">)</span>
+
+        <span class="c"># remove it from n</span>
+        <span class="n">n</span> <span class="o">%=</span> <span class="mi">20</span>
+
+    <span class="c"># handle the ones</span>
+    <span class="k">if</span> <span class="n">n</span><span class="p">:</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ones_tens</span><span class="p">[</span><span class="n">n</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="s">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="id105">
+
+<pre class="literal-block">
+$ py.test -qx
+F
+=================== FAILURES ===================
+__________________ test_zero ___________________
+
+    def test_zero():
+&gt;       assert 'zero' == english_number(0)
+E       assert 'zero' == ''
+E         - zero
+
+test_english.py:7: AssertionError
+!!!! Interrupted: stopping after 1 failures !!!!
+1 failed in 0.04 seconds
+</pre>
+</div>
+<div class="section" id="ahhhhh">
+<h1>AHHHHH!!!</h1>
+</div>
+<div class="section" id="id106">
+
+<p>wuzzgoinon?</p>
+</div>
+<div class="section" id="id107">
+
+<p>we <em>fixed</em> twenty but <em>broke</em> zero…</p>
+</div>
+<div class="section" id="how">
+<h1>How?</h1>
+</div>
+<div class="section" id="id108">
+
+<p>substitute <tt class="docutils literal">0</tt> for <tt class="docutils literal">n</tt>…</p>
+</div>
+<div class="section" id="id109">
+
+<pre class="code python literal-block">
+<span class="k">def</span> <span class="nf">english_number</span><span class="p">(</span><span class="mi">0</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="mi">0</span> <span class="o">&gt;=</span> <span class="mi">20</span><span class="p">:</span>  <span class="c"># nope, skip this bit…</span>
+        <span class="c"># …</span>
+
+    <span class="k">if</span> <span class="mi">0</span><span class="p">:</span>  <span class="c"># nope, skip this bit…</span>
+        <span class="c"># …</span>
+
+    <span class="k">return</span> <span class="s">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="id110">
+
+<p>In English,</p>
+<div class="line-block">
+<div class="line">“<em>join an empty list with</em></div>
+<div class="line"><em>an empty string…</em>”</div>
+</div>
+</div>
+<div class="section" id="id111">
+
+<p><em>creativity</em></p>
+</div>
+<div class="section" id="id112">
+
+<p>There are</p>
+<p><em>several</em></p>
+<p>approaches</p>
+</div>
+<div class="section" id="id113">
+
+<p>Mine: do we have <em>anything left</em>?</p>
+</div>
+<div class="section" id="id114">
+
+<pre class="code python literal-block">
+<span class="k">def</span> <span class="nf">english_number</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">anything_left</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;=</span> <span class="mi">20</span><span class="p">:</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">'twenty'</span><span class="p">)</span>
+
+        <span class="n">n</span> <span class="o">%=</span> <span class="mi">20</span>
+        <span class="n">anything_left</span> <span class="o">=</span> <span class="n">n</span>
+
+    <span class="k">if</span> <span class="n">anything_left</span><span class="p">:</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ones_tens</span><span class="p">[</span><span class="n">n</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="s">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="id115">
+
+<pre class="literal-block">
+$ py.test -qx
+.....................F
+=================== FAILURES ===================
+_______________ test_twenty_one ________________
+
+    def test_twenty_one():
+&gt;       assert 'twenty-one' == english_number(21)
+E       assert 'twenty-one' == 'twentyone'
+E         - twenty-one
+E         ?       -
+E         + twentyone
+
+test_english.py:49: AssertionError
+!!!! Interrupted: stopping after 1 failures !!!!
+1 failed, 21 passed in 0.06 seconds
+</pre>
+</div>
+<div class="section" id="id116">
+
+<p><em>progress</em></p>
+</div>
+<div class="section" id="double-digits">
+<h1>Double Digits</h1>
+</div>
+<div class="section" id="id117">
+
+<p>pretty much the same as</p>
+<p><em>twenties</em></p>
+<p>except we <em>look up</em> the tens place</p>
+</div>
+<div class="section" id="id118">
+
+<pre class="code python literal-block">
+<span class="k">def</span> <span class="nf">english_number</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">anything_left</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;=</span> <span class="mi">20</span><span class="p">:</span>
+        <span class="n">place</span> <span class="o">=</span> <span class="n">n</span> <span class="o">/</span> <span class="mi">10</span>
+        <span class="n">anything_left</span> <span class="o">=</span> <span class="n">n</span> <span class="o">=</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">10</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tens</span><span class="p">[</span><span class="n">place</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">anything_left</span><span class="p">:</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">'-'</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">anything_left</span><span class="p">:</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ones_teens</span><span class="p">[</span><span class="n">n</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="s">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="id119">
+
+<pre class="literal-block">
+$ py.test -qx
+..................................................
+50 passed in 0.07 seconds
+</pre>
+</div>
+<div class="section" id="id120">
+
+<p><em>progress</em></p>
+</div>
+<div class="section" id="id121">
+
+<p>(Tivo™ “bedeep bedeep” noise here.</p>
+<p>Hundreds are just like tens,</p>
+<p>until we get to…)</p>
+</div>
+<div class="section" id="one-hundred">
+<h1>One Hundred</h1>
+<pre class="code python literal-block">
+<span class="k">def</span> <span class="nf">english_number</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">anything_left</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;=</span> <span class="mi">100</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s">'one hundred'</span>
+
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;=</span> <span class="mi">20</span><span class="p">:</span>
+    <span class="c"># etc.</span>
+</pre>
+</div>
+<div class="section" id="one-hundred-whatever">
+<h1>One Hundred Whatever</h1>
+<pre class="code python literal-block">
+<span class="k">def</span> <span class="nf">english_number</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">anything_left</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;=</span> <span class="mi">100</span><span class="p">:</span>
+        <span class="n">anything_left</span> <span class="o">=</span> <span class="n">n</span> <span class="o">=</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">100</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">'one hundred'</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">anything_left</span><span class="p">:</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">' '</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;=</span> <span class="mi">20</span><span class="p">:</span>
+    <span class="c"># etc.</span>
+</pre>
+</div>
+<div class="section" id="thousands">
+<h1>thousands</h1>
+</div>
+<div class="section" id="id122">
+
+<p>if you were on</p>
+<p><em>autopilot</em></p>
+</div>
+<div class="section" id="id123">
+
+<p>now’s the time to</p>
+<p>turn it <strong>off</strong></p>
+</div>
+<div class="section" id="id124">
+
+<p>problem contours</p>
+</div>
+<div class="section" id="id125">
+
+<p>Look at the problem</p>
+</div>
+<div class="section" id="id126">
+
+<p>1000</p>
+<p>one thousand</p>
+</div>
+<div class="section" id="id127">
+
+<p>1001</p>
+<p>one thousand one</p>
+</div>
+<div class="section" id="id128">
+
+<p>8206</p>
+<p>eight thousand two hundred six</p>
+</div>
+<div class="section" id="id129">
+
+<p>16384</p>
+<p>sixteen thousand three hundred eighty-four</p>
+</div>
+<div class="section" id="id130">
+
+<p>in other words</p>
+</div>
+<div class="section" id="id131">
+
+<p>split number into</p>
+<p>thousands, hundreds, tens</p>
+</div>
+<div class="section" id="id132">
+
+<p>result is</p>
+<p><tt class="docutils literal">english_number(thousands) + 'thousand'</tt> +</p>
+<p><tt class="docutils literal">english_number(hundreds) + 'hundred'</tt> +</p>
+<p><tt class="docutils literal">english_number(tens)</tt></p>
+</div>
+<div class="section" id="id133">
+
+<p><tt class="docutils literal">english_number(thousands)</tt></p>
+<p>becomes</p>
+<p><tt class="docutils literal">english_number(16)</tt></p>
+</div>
+<div class="section" id="id134">
+
+<p>Does anything about this look…</p>
+</div>
+<div class="section" id="id135">
+
+<p><em>familiar</em></p>
+</div>
+<div class="section" id="id136">
+
+<pre class="code python literal-block">
+<span class="o">&gt;&gt;&gt;</span> <span class="n">numerals</span> <span class="o">=</span> <span class="p">[(</span><span class="s">'D'</span><span class="p">,</span> <span class="mi">500</span><span class="p">),</span> <span class="p">(</span><span class="s">'C'</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>  <span class="c"># etc.</span>
+<span class="o">...</span>             <span class="p">(</span><span class="s">'L'</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span> <span class="p">(</span><span class="s">'X'</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+<span class="o">...</span>             <span class="p">(</span><span class="s">'V'</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="s">'I'</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">roman</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<span class="o">...</span>     <span class="n">parts</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="o">...</span>     <span class="k">for</span> <span class="n">numeral</span><span class="p">,</span> <span class="n">decimal</span> <span class="ow">in</span> <span class="n">numerals</span><span class="p">:</span>
+<span class="o">...</span>         <span class="n">count</span> <span class="o">=</span> <span class="n">n</span> <span class="o">/</span> <span class="n">decimal</span>
+<span class="o">...</span>         <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numeral</span> <span class="o">*</span> <span class="n">count</span><span class="p">)</span>
+<span class="o">...</span>         <span class="n">n</span> <span class="o">%=</span> <span class="n">decimal</span>
+<span class="o">...</span>     <span class="k">return</span> <span class="s">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="id137">
+
+<p>replace the numerals…</p>
+</div>
+<div class="section" id="id138">
+
+<pre class="code python literal-block">
+<span class="n">not_so_wee_numbers</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="c"># This number makes my computer really mad</span>
+    <span class="c"># (10**(10**100), 'googolplex'),</span>
+    <span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">100</span><span class="p">,</span> <span class="s">'googol'</span><span class="p">),</span>
+    <span class="c"># …</span>
+    <span class="p">(</span><span class="mi">1000000000000000000000000000</span><span class="p">,</span> <span class="s">'octillion'</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">1000000000000000000000000</span><span class="p">,</span> <span class="s">'septillion'</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">1000000000000000000000</span><span class="p">,</span> <span class="s">'sextillion'</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">1000000000000000000</span><span class="p">,</span> <span class="s">'quintillion'</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">1000000000000000</span><span class="p">,</span> <span class="s">'quadrillion'</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">1000000000000</span><span class="p">,</span> <span class="s">'trillion'</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">1000000000</span><span class="p">,</span> <span class="s">'billion'</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">1000000</span><span class="p">,</span> <span class="s">'million'</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="s">'thousand'</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="s">'hundred'</span><span class="p">),</span>
+<span class="p">]</span>
+</pre>
+</div>
+<div class="section" id="id139">
+
+<p>English still more</p>
+<p>complicated</p>
+<p>than Roman</p>
+</div>
+<div class="section" id="id140">
+
+<p>3 main cases:</p>
+<p>ones &amp; teens</p>
+<p>double digits</p>
+<p>big numbers (&gt;= 100)</p>
+</div>
+<div class="section" id="id141">
+
+<p>big numbers uses <em>recursion</em></p>
+<p>to handle the question</p>
+<p>“how <em>many</em> octillion?”</p>
+</div>
+<div class="section" id="id142">
+
+<p>For learning:</p>
+<p><a class="reference external" href="https://github.com/drocco007/pyatl-english-numerals">github: source &amp; instructions</a></p>
+</div>
+<div class="section" id="id143">
+
+<p>For fun: command line</p>
+</div>
+<div class="section" id="id144">
+
+<pre class="literal-block">
+$ python english_number.py [#, #, #, …]
+</pre>
+</div>
+<div class="section" id="id145">
+
+<p>for reference</p>
+</div>
+<div class="section" id="id146">
+
+<p>age of the universe <em>in nanoseconds</em></p>
+<p>4.354×10<sup>26</sup></p>
+</div>
+<div class="section" id="id147">
+
+<p>number of atoms in the known universe</p>
+<p>10<sup>82</sup></p>
+</div>
+<div class="section" id="id148">
+
+<pre class="literal-block">
+$ python english_number.py
+5352358218037910232050249409994268755976737569
+6365547821314866015615056550844069481866044289
+5167702150: fifty-three googol five thousand two
+hundred thirty-five quindecillion eight hundred
+twenty-one quattuordecillion eight hundred three
+tredecillion seven hundred ninety-one duodecillion
+twenty-three undecillion two hundred five decillion
+twenty-four nonillion nine hundred forty octillion
+nine hundred ninety-nine septillion four hundred
+twenty-six sextillion eight hundred seventy-five
+quintillion five hundred ninety-seven quadrillion
+six hundred seventy-three trillion seven hundred
+fifty-six billion nine hundred sixty-three million
+six hundred fifty-five thousand four hundred
+seventy-eight quindecillion two hundred thirteen…
+</pre>
+</div>
+<div class="section" id="id149">
+
+<p>so the next time you need to write a</p>
+<p><em>102 digit</em></p>
+<p>check</p>
+</div>
+<div class="section" id="id150">
+
+<p>Thank you!</p>
+</div>
+<div class="section" id="id151">
+
+<p>♥</p>
+<p>&#64;drocco007</p>
+<!-- single quote: ’
+double quotes: x“”x
+em-dash: —
+vertical ellipsis: ⋮
+arrows: ←, ↑, →, ↓, ↔, ↕, ↖, ↗, ↘, ↙ -->
+<script>
+    window.slide_transition_time = 200;
+</script>
+<script src="static/jquery-1.6.2.min.js"></script>
+<script src="static/jquery.url.min.js"></script>
+<script src="static/slides2.js"></script></div>
+</div>
+</body>
+</html>

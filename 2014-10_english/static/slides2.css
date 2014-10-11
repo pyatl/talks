@@ -1,0 +1,235 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+body {
+  line-height: 1.1;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+caption, th, td {
+  text-align: left;
+  font-weight: normal;
+  vertical-align: middle;
+}
+
+q, blockquote {
+  quotes: none;
+}
+q:before, q:after, blockquote:before, blockquote:after {
+  content: "";
+  content: none;
+}
+
+a img {
+  border: none;
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary {
+  display: block;
+}
+
+/* http://www.colourlovers.com/palette/299662/safeword */
+body {
+  font-family: "Gentium";
+}
+body.reading-mode {
+  background-color: #eee;
+}
+body.presentation-mode {
+  background-color: #000;
+  color: #fff;
+  overflow: hidden;
+}
+
+.slide {
+  position: absolute;
+  display: none;
+}
+.current-slide {
+  display: table;
+}
+
+body.reading-mode .section {
+  margin: 1em auto;
+  max-width: 24em;
+  padding: 0.5em;
+}
+body.presentation-mode .section {
+  display: table-cell;
+  height: 768px;
+}
+
+.section {
+  background-color: #fff;
+  color: #000;
+  vertical-align: middle;
+  font-size: 24px;
+  text-align: center;
+}
+body.presentation-mode .section {
+  width: 1024px;
+  font-size: 56px;
+}
+
+#slide h1 {
+  display: none;
+}
+
+h1 {
+  font-weight: bold;
+}
+
+ul, ol {
+  display: inline-block;
+  margin: 0.5em auto;
+  padding-left: 1.5em;
+  text-align: left;
+}
+
+ul {
+  list-style: disc;
+}
+
+/* For | formatting inside of "*" bullet list item */
+li div.first {
+  margin-top: 0;
+}
+
+ol {
+  list-style: decimal;
+}
+
+table {
+    margin: 0.5em auto;
+}
+th {
+    text-align: center;
+}
+td {
+    padding: 0.0em 0.25em;
+    text-align: center;
+}
+
+h1, p, .line-block, .highlight {
+  margin: 0.8em 0em;
+}
+
+pre {
+  font-family: "DejaVu Sans Mono", monospace;
+  display: inline-block;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  -moz-border-radius: 0.5em;
+  -webkit-border-radius: 0.5em;
+  -o-border-radius: 0.5em;
+  -ms-border-radius: 0.5em;
+  -khtml-border-radius: 0.5em;
+  border-radius: 0.5em;
+  -moz-box-shadow: 0 0 0.5em #e1af6f;
+  -webkit-box-shadow: 0 0 0.5em #e1af6f;
+  -o-box-shadow: 0 0 0.5em #e1af6f;
+  box-shadow: 0 0 0.5em #e1af6f;
+  background-color: #faf3e9;
+  padding: 0.5em;
+  line-height: 1.2em;
+  text-align: left;
+  font-size: 18px;
+}
+body.reading-mode pre {
+  font-size: 18px;  /* allows for 48 characters */
+}
+body.presentation-mode pre {
+  font-size: 32px;  /* allows for 48 characters */
+}
+
+tt {
+  font-family: "DejaVu Sans Mono", monospace;
+  font-size: 18px;
+  color: #c54b2c;
+}
+body.presentation-mode tt {
+    font-size: 44px;
+}
+
+em {
+  font-style: italic;
+  color: #095358; /*#0b746b;*/
+}
+
+strong {
+  color: #a34809; /*#c45b0b;*/
+}
+
+body.reading-mode img {
+  max-width: 100%;
+  height: auto !important;
+}
+
+/* Extra pygments */
+.p {
+  color: #9b3b23;
+}
+
+/* Timer */
+.timer {
+  /* z-index: 1000;*/
+  position: absolute;
+  left: 1030px;
+  padding: 1em;
+  text-align: left;
+  color: white;
+  font-size: 48px;
+  font-weight: bold;
+}
+
+.emergency {
+  background-color: #a00;
+}
+
+/* print */
+
+@media print{
+    @page {
+        size: landscape;
+    }
+    body.reading-mode {
+        background-color: white;
+    }
+    .section {
+        page-break-after: always;
+        font-size: 36pt;
+        /* height: 7.5in; */
+    }
+    body.reading-mode pre  {
+        font-size: 18pt;
+    }
+    tt {
+        font-size: 28pt;
+    }
+}
