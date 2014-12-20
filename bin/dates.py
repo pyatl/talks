@@ -37,4 +37,4 @@ for month in range(1, 13):
     else:
         meeting_date = third_week[calendar.THURSDAY]
 
-    print('%3s: %2s' % (calendar.month_abbr[month], meeting_date))
+    print('%s %s' % (calendar.month_name[month], meeting_date))
