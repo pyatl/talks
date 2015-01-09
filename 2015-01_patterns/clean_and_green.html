@@ -1,0 +1,1276 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.12: http://docutils.sourceforge.net/" />
+<title></title>
+<link rel="stylesheet" href="static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="static/slides2.css" type="text/css" />
+</head>
+<body class="reading-mode">
+<div class="document">
+
+
+<div class="section" id="clean-and-green">
+<h1>Clean and Green</h1>
+<p>Pragmatic Architecture Patterns</p>
+<div class="line-block">
+<div class="line">PyAtl — January 8, 2015</div>
+<div class="line">&#64;drocco007</div>
+</div>
+</div>
+<div class="section" id="why">
+<h1>Why?</h1>
+</div>
+<div class="section" id="slide">
+
+<p>you build systems</p>
+</div>
+<div class="section" id="id1">
+
+<p>build</p>
+<p><em>understandable</em></p>
+<p>systems</p>
+</div>
+<div class="section" id="id2">
+
+<p>build</p>
+<p>understandable, <em>testable</em></p>
+<p>systems</p>
+</div>
+<div class="section" id="id3">
+
+<p>build</p>
+<p>understandable, testable, <em>maintainable</em></p>
+<p>systems</p>
+</div>
+<div class="section" id="id4">
+
+<p>build new or <strong>transform existing</strong> systems</p>
+<p>such that they are</p>
+<p><em>understandable, testable, maintainable</em></p>
+</div>
+<div class="section" id="how">
+<h1>How?</h1>
+</div>
+<div class="section" id="id5">
+
+<p><em>Simple</em> is better than <strong>complex</strong></p>
+</div>
+<div class="section" id="the-pitch">
+<h1>The pitch</h1>
+</div>
+<div class="section" id="id6">
+
+<div class="line-block">
+<div class="line"><em>Data</em> and <em>transforms</em> are easier</div>
+<div class="line">to understand and maintain</div>
+<div class="line">than <strong>coupled procedures</strong></div>
+</div>
+</div>
+<div class="section" id="id7">
+
+<p>Most objects are <strong>coupled procedures</strong></p>
+</div>
+<div class="section" id="id8">
+
+<p>Methods <strong>implicitly depend</strong> on</p>
+<p>mutable instance state</p>
+</div>
+<div class="section" id="id9">
+
+<p>Methods are therefore</p>
+<p><strong>coupled</strong> to that state</p>
+</div>
+<div class="section" id="id10">
+
+<p>and therefore to each other</p>
+</div>
+<div class="section" id="id11">
+
+<p>instead…</p>
+</div>
+<div class="section" id="id12">
+
+<p>Build systems around</p>
+<p><strong>functional transforms</strong></p>
+<p>of <em>simple values</em> and <em>data structures</em></p>
+</div>
+<div class="section" id="objection">
+<h1>Objection!</h1>
+</div>
+<div class="section" id="id13">
+
+<p>No one argues the</p>
+<p><em>high-level expressivity</em> &amp; <em>convenient testability</em></p>
+<p>of <strong>pure functions</strong></p>
+</div>
+<div class="section" id="id14">
+
+<p>So what’s the problem?</p>
+</div>
+<div class="section" id="id15">
+
+<pre class="code python literal-block">
+<span class="o">&gt;&gt;&gt;</span> <span class="n">objections</span> <span class="o">=</span> <span class="p">{</span><span class="s">'a'</span><span class="p">}</span> <span class="o">|</span> <span class="p">{</span><span class="s">'b'</span><span class="p">}</span>
+</pre>
+</div>
+<div class="section" id="id16">
+
+<p>“That’s a fine academic toy,</p>
+<p>but it can’t build <strong>real</strong> systems.”</p>
+</div>
+<div class="section" id="id17">
+
+<p>(“real” generally being a euphemism</p>
+<p>for “HTML-producing” ;)</p>
+</div>
+<div class="section" id="id18">
+
+<p>“We can’t afford to</p>
+<p><strong>rewrite</strong></p>
+<p>our <em>whole system</em>!”</p>
+</div>
+<div class="section" id="id19">
+
+<p>These concerns are understandable,</p>
+</div>
+<div class="section" id="id20">
+
+<p>but not <em>true</em></p>
+</div>
+<div class="section" id="claim">
+<h1>Claim</h1>
+</div>
+<div class="section" id="id21">
+
+<p>You don’t <em>need</em> a full rewrite</p>
+</div>
+<div class="section" id="id22">
+
+<p>(and you definitely <strong>should not</strong> attempt one)</p>
+</div>
+<div class="section" id="id23">
+
+<p>You <em>can</em> build real systems this way</p>
+</div>
+<div class="section" id="id24">
+<h1>The pitch</h1>
+</div>
+<div class="section" id="id25">
+
+<p><em>Simple</em> is better than <strong>complex</strong></p>
+</div>
+<div class="section" id="id26">
+
+<p>Build systems around</p>
+<p><strong>functional transforms</strong></p>
+<p>of <em>simple values</em> and <em>data structures</em></p>
+</div>
+<div class="section" id="id27">
+<h1>How?</h1>
+</div>
+<div class="section" id="id28">
+
+<p>Apply the Clean Architecture</p>
+</div>
+<div class="section" id="id29">
+
+<img alt="static/CleanArchitecture.jpg" src="static/CleanArchitecture.jpg" />
+</div>
+<div class="section" id="id30">
+
+<div class="line-block">
+<div class="line">“In general, the <em>further in</em> you go,</div>
+<div class="line">the <strong>higher level</strong> the software becomes.</div>
+<div class="line">The <em>outer circles</em> are mechanisms.</div>
+<div class="line">The <em>inner circles</em> are policies.”</div>
+</div>
+</div>
+<div class="section" id="id31">
+
+<div class="line-block">
+<div class="line">“The important thing is</div>
+<div class="line">that <em>isolated, simple</em> data structures</div>
+<div class="line">are passed across the boundaries.”</div>
+</div>
+</div>
+<div class="section" id="id32">
+
+<div class="line-block">
+<div class="line">“When any of the <em>external parts</em></div>
+<div class="line">of the system become <strong>obsolete</strong>, like</div>
+<div class="line">the database, or the web framework,</div>
+<div class="line">you can <strong>replace</strong> those obsolete</div>
+<div class="line">elements with a minimum of fuss.”</div>
+</div>
+<p>— Uncle Bob Martin</p>
+</div>
+<div class="section" id="id33">
+<h1>How?</h1>
+</div>
+<div class="section" id="id34">
+
+<p>Apply the Clean Architecture</p>
+</div>
+<div class="section" id="id35">
+
+<p>using</p>
+</div>
+<div class="section" id="pragmatic-architecture-patterns">
+<h1>Pragmatic Architecture Patterns</h1>
+</div>
+<div class="section" id="pragmatic">
+<h1>Pragmatic</h1>
+</div>
+<div class="section" id="id36">
+
+<p>Tools you can apply to existing systems</p>
+</div>
+<div class="section" id="id37">
+
+<p>Techniques for limiting the</p>
+<p><em>required change surface</em></p>
+</div>
+<div class="section" id="id38">
+
+<p>smaller change surface</p>
+<p>↓</p>
+<p>iterative incremental improvement</p>
+</div>
+<div class="section" id="id39">
+
+<p>smaller change surface</p>
+<p>↓</p>
+<p>measurable progress</p>
+</div>
+<div class="section" id="id40">
+
+<p>smaller change surface</p>
+<p>↓</p>
+<p>higher confidence &amp; likelihood of success</p>
+</div>
+<div class="section" id="architecture">
+<h1>Architecture</h1>
+</div>
+<div class="section" id="id41">
+
+<p>Addresses the design of the entire system</p>
+</div>
+<div class="section" id="id42">
+
+<p>Framework for assigning responsibilities</p>
+</div>
+<div class="section" id="patterns">
+<h1>Patterns</h1>
+</div>
+<div class="section" id="id43">
+
+<p>Generalized problem types and</p>
+<p>solution approaches</p>
+</div>
+<div class="section" id="id44">
+
+</div>
+<div class="section" id="id45">
+
+<p>The idea is simple</p>
+</div>
+<div class="section" id="id46">
+
+<p>Build systems around</p>
+<p><strong>functional transforms</strong></p>
+<p>of <em>simple values</em> and <em>data structures</em></p>
+</div>
+<div class="section" id="id47">
+
+<p>(but it’s not necessarily <strong>easy</strong>…)</p>
+</div>
+<div class="section" id="id48">
+
+<p>Exhibit A</p>
+</div>
+<div class="section" id="id49">
+
+<pre class="code python literal-block">
+<span class="nd">&#64;expose</span><span class="p">()</span>
+<span class="nd">&#64;identity.require</span><span class="p">(</span><span class="n">identity</span><span class="o">.</span><span class="n">has_permission</span><span class="p">(</span><span class="s">'agreement_delete'</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="n">agreement</span> <span class="o">=</span> <span class="n">EndUserAgreement</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">agreement</span><span class="o">.</span><span class="n">start_date</span> <span class="o">&lt;=</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">():</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">'success'</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span> <span class="s">'msg'</span><span class="p">:</span> <span class="s">'&lt;already active msg&gt;'</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">EndUserAgreement</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">'success'</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span> <span class="s">'msg'</span><span class="p">:</span> <span class="s">'&lt;only agreement msg&gt;'</span><span class="p">}</span>
+
+    <span class="c"># In order to ensure there are no gaps in agreements, …</span>
+    <span class="n">previous_agreement</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_previous</span><span class="p">(</span><span class="n">agreement</span><span class="o">.</span><span class="n">start_date</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">previous_agreement</span><span class="p">:</span>
+        <span class="n">previous_agreement</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="n">agreement</span><span class="o">.</span><span class="n">end_date</span>
+    <span class="k">elif</span> <span class="n">agreement</span><span class="o">.</span><span class="n">end_date</span><span class="p">:</span>
+        <span class="c"># If the deleted agreement was the first one, then we find…</span>
+        <span class="n">next_agreement</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_next</span><span class="p">(</span><span class="n">agreement</span><span class="o">.</span><span class="n">start_date</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">next_agreement</span><span class="p">:</span>
+            <span class="n">next_agreement</span><span class="o">.</span><span class="n">start_date</span> <span class="o">=</span> <span class="n">agreement</span><span class="o">.</span><span class="n">start_date</span>
+
+    <span class="n">agreement</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">'success'</span><span class="p">:</span> <span class="bp">True</span><span class="p">}</span>
+</pre>
+</div>
+<div class="section" id="id50">
+
+<p>Fetch the agreement to delete from the ORM</p>
+<pre class="code python literal-block">
+<span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="n">agreement</span> <span class="o">=</span> <span class="n">EndUserAgreement</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+
+    <span class="c">#                                                              …</span>
+</pre>
+</div>
+<div class="section" id="id51">
+
+<p>Check that it is not yet active</p>
+<pre class="code python literal-block">
+<span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="c">#                                                              …</span>
+
+    <span class="k">if</span> <span class="n">agreement</span><span class="o">.</span><span class="n">start_date</span> <span class="o">&lt;=</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">():</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">'success'</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span> <span class="s">'msg'</span><span class="p">:</span> <span class="s">'&lt;already active msg&gt;'</span><span class="p">}</span>
+
+    <span class="c">#                                                              …</span>
+</pre>
+<p>(and format a message back if it is)</p>
+</div>
+<div class="section" id="id52">
+
+<p>and that it is not the only agreement</p>
+<pre class="code python literal-block">
+<span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="c">#                                                              …</span>
+
+    <span class="k">if</span> <span class="n">EndUserAgreement</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">'success'</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span> <span class="s">'msg'</span><span class="p">:</span> <span class="s">'&lt;only agreement msg&gt;'</span><span class="p">}</span>
+
+    <span class="c">#                                                              …</span>
+</pre>
+</div>
+<div class="section" id="id53">
+
+<div class="line-block">
+<div class="line">Adjust either the previous or next</div>
+<div class="line">agreement to cover any gap</div>
+</div>
+<pre class="code python literal-block">
+<span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="c">#                                                              …</span>
+    <span class="n">previous_agreement</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_previous</span><span class="p">(</span><span class="n">agreement</span><span class="o">.</span><span class="n">start_date</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">previous_agreement</span><span class="p">:</span>
+        <span class="n">previous_agreement</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="n">agreement</span><span class="o">.</span><span class="n">end_date</span>
+    <span class="k">elif</span> <span class="n">agreement</span><span class="o">.</span><span class="n">end_date</span><span class="p">:</span>
+        <span class="n">next_agreement</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_next</span><span class="p">(</span><span class="n">agreement</span><span class="o">.</span><span class="n">start_date</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">next_agreement</span><span class="p">:</span>
+            <span class="n">next_agreement</span><span class="o">.</span><span class="n">start_date</span> <span class="o">=</span> <span class="n">agreement</span><span class="o">.</span><span class="n">start_date</span>
+</pre>
+</div>
+<div class="section" id="id54">
+
+<p>Engage</p>
+<pre class="code python literal-block">
+<span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="c">#                                                              …</span>
+
+    <span class="n">agreement</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">'success'</span><span class="p">:</span> <span class="bp">True</span><span class="p">}</span>
+</pre>
+</div>
+<div class="section" id="id55">
+
+<p>So what’s the problem?</p>
+</div>
+<div class="section" id="q">
+<h1>Q:</h1>
+</div>
+<div class="section" id="id56">
+<h1>Q:</h1>
+<p>How would you test this?</p>
+</div>
+<div class="section" id="id57">
+
+<p>How would you test</p>
+<ul class="simple">
+<li>5–6 ORM calls</li>
+<li>≥ 3 business rules</li>
+<li>≥ 5 axes of responsibility</li>
+</ul>
+</div>
+<div class="section" id="id58">
+
+<pre class="code python literal-block">
+<span class="nd">&#64;expose</span><span class="p">()</span>
+<span class="nd">&#64;identity.require</span><span class="p">(</span><span class="n">identity</span><span class="o">.</span><span class="n">has_permission</span><span class="p">(</span><span class="s">'agreement_delete'</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="n">agreement</span> <span class="o">=</span> <span class="n">EndUserAgreement</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">agreement</span><span class="o">.</span><span class="n">start_date</span> <span class="o">&lt;=</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">():</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">'success'</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span> <span class="s">'msg'</span><span class="p">:</span> <span class="s">'&lt;already active msg&gt;'</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">EndUserAgreement</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">'success'</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span> <span class="s">'msg'</span><span class="p">:</span> <span class="s">'&lt;only agreement msg&gt;'</span><span class="p">}</span>
+
+    <span class="c"># In order to ensure there are no gaps in agreements, …</span>
+    <span class="n">previous_agreement</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_previous</span><span class="p">(</span><span class="n">agreement</span><span class="o">.</span><span class="n">start_date</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">previous_agreement</span><span class="p">:</span>
+        <span class="n">previous_agreement</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="n">agreement</span><span class="o">.</span><span class="n">end_date</span>
+    <span class="k">elif</span> <span class="n">agreement</span><span class="o">.</span><span class="n">end_date</span><span class="p">:</span>
+        <span class="c"># If the deleted agreement was the first one, then we find…</span>
+        <span class="n">next_agreement</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_next</span><span class="p">(</span><span class="n">agreement</span><span class="o">.</span><span class="n">start_date</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">next_agreement</span><span class="p">:</span>
+            <span class="n">next_agreement</span><span class="o">.</span><span class="n">start_date</span> <span class="o">=</span> <span class="n">agreement</span><span class="o">.</span><span class="n">start_date</span>
+
+    <span class="n">agreement</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">'success'</span><span class="p">:</span> <span class="bp">True</span><span class="p">}</span>
+</pre>
+</div>
+<div class="section" id="id59">
+<h1>Q:</h1>
+</div>
+<div class="section" id="id60">
+<h1>Q:</h1>
+<p>How would you implement</p>
+<p><strong>custom rules</strong></p>
+<p>if a client asked?</p>
+</div>
+<div class="section" id="counterpoint">
+<h1>Counterpoint</h1>
+<p>How could we possibly convert</p>
+<p><strong>delete()</strong></p>
+<p>to a purely functional form?</p>
+</div>
+<div class="section" id="id61">
+
+<p>(for Pete’s sake, dan, even the <em>name</em> has state mutation in it!)</p>
+</div>
+<div class="section" id="pattern-1-fauxo">
+<h1>Pattern 1: FauxO</h1>
+<p>Functional core, imperative shell</p>
+</div>
+<div class="section" id="id62">
+
+<p>Imperative shell:</p>
+<p><strong>procedural “glue”</strong>  that offers</p>
+<p>an <em>OO interface</em> &amp; <em>manages dependencies</em></p>
+</div>
+<div class="section" id="id63">
+
+<p>Functional core:</p>
+<p>implements <strong>all</strong> the <em>decisions</em></p>
+</div>
+<div class="section" id="key-rule">
+<h1>Key rule</h1>
+<p>Never mix <em>decisions</em> and <strong>dependencies</strong></p>
+</div>
+<div class="section" id="id64">
+
+<p><em>logic</em> goes only in the <strong>functional core</strong></p>
+</div>
+<div class="section" id="id65">
+
+<p><em>dependencies</em> go only in the <strong>imperative shell</strong></p>
+</div>
+<div class="section" id="id66">
+
+<pre class="code python literal-block">
+<span class="nd">&#64;expose</span><span class="p">()</span>
+<span class="nd">&#64;identity.require</span><span class="p">(</span><span class="n">identity</span><span class="o">.</span><span class="n">has_permission</span><span class="p">(</span><span class="s">'agreement_delete'</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="n">agreement</span> <span class="o">=</span> <span class="n">EndUserAgreement</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">agreement</span><span class="o">.</span><span class="n">start_date</span> <span class="o">&lt;=</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">():</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">'success'</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span> <span class="s">'msg'</span><span class="p">:</span> <span class="s">'&lt;already active msg&gt;'</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">EndUserAgreement</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">'success'</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span> <span class="s">'msg'</span><span class="p">:</span> <span class="s">'&lt;only agreement msg&gt;'</span><span class="p">}</span>
+
+    <span class="c"># In order to ensure there are no gaps in agreements, …</span>
+    <span class="n">previous_agreement</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_previous</span><span class="p">(</span><span class="n">agreement</span><span class="o">.</span><span class="n">start_date</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">previous_agreement</span><span class="p">:</span>
+        <span class="n">previous_agreement</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="n">agreement</span><span class="o">.</span><span class="n">end_date</span>
+    <span class="k">elif</span> <span class="n">agreement</span><span class="o">.</span><span class="n">end_date</span><span class="p">:</span>
+        <span class="c"># If the deleted agreement was the first one, then we find…</span>
+        <span class="n">next_agreement</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_next</span><span class="p">(</span><span class="n">agreement</span><span class="o">.</span><span class="n">start_date</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">next_agreement</span><span class="p">:</span>
+            <span class="n">next_agreement</span><span class="o">.</span><span class="n">start_date</span> <span class="o">=</span> <span class="n">agreement</span><span class="o">.</span><span class="n">start_date</span>
+
+    <span class="n">agreement</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">'success'</span><span class="p">:</span> <span class="bp">True</span><span class="p">}</span>
+</pre>
+</div>
+<div class="section" id="id67">
+
+<p>becomes</p>
+</div>
+<div class="section" id="id68">
+
+<pre class="code python literal-block">
+<span class="nd">&#64;expose</span><span class="p">()</span>
+<span class="nd">&#64;identity.require</span><span class="p">(</span><span class="n">identity</span><span class="o">.</span><span class="n">has_permission</span><span class="p">(</span><span class="s">'agreement_delete'</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="n">success</span><span class="p">,</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">agreements</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">'success'</span><span class="p">:</span> <span class="n">success</span><span class="p">,</span> <span class="s">'msg'</span><span class="p">:</span> <span class="n">msg</span><span class="p">}</span>
+</pre>
+</div>
+<div class="section" id="id69">
+
+<p>Our HTTP endpoint now does its</p>
+<p><em>one job</em></p>
+</div>
+<div class="section" id="id70">
+
+<p>call routing</p>
+</div>
+<div class="section" id="id71">
+
+<pre class="code python literal-block">
+<span class="nd">&#64;expose</span><span class="p">()</span>
+<span class="nd">&#64;identity.require</span><span class="p">(</span><span class="n">identity</span><span class="o">.</span><span class="n">has_permission</span><span class="p">(</span><span class="s">'agreement_delete'</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="n">success</span><span class="p">,</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">agreements</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">'success'</span><span class="p">:</span> <span class="n">success</span><span class="p">,</span> <span class="s">'msg'</span><span class="p">:</span> <span class="n">msg</span><span class="p">}</span>
+</pre>
+</div>
+<div class="section" id="id72">
+
+<p>We’ve reduced its <strong>responsibility surface</strong> four fold</p>
+</div>
+<div class="section" id="id73">
+
+<p>It no longer has to change with</p>
+<div class="line-block">
+<div class="line">the Agreement model</div>
+<div class="line">the persistence subsystem</div>
+<div class="line">the removal rules</div>
+<div class="line">the gap adjustment rules</div>
+</div>
+</div>
+<div class="section" id="id74">
+
+<pre class="code python literal-block">
+<span class="nd">&#64;expose</span><span class="p">()</span>
+<span class="nd">&#64;identity.require</span><span class="p">(</span><span class="n">identity</span><span class="o">.</span><span class="n">has_permission</span><span class="p">(</span><span class="s">'agreement_delete'</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="n">success</span><span class="p">,</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">agreements</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">'success'</span><span class="p">:</span> <span class="n">success</span><span class="p">,</span> <span class="s">'msg'</span><span class="p">:</span> <span class="n">msg</span><span class="p">}</span>
+</pre>
+</div>
+<div class="section" id="id75">
+
+<p><tt class="docutils literal">agreements</tt> is a <em>manager</em> object in the imperative shell</p>
+</div>
+<div class="section" id="id76">
+
+<p><tt class="docutils literal">agreements</tt> gathers all the dependencies: stateful objects, system settings, required libraries</p>
+</div>
+<div class="section" id="id77">
+
+<p>What does it look like?</p>
+</div>
+<div class="section" id="step-1-is-removable">
+<h1>Step 1: <tt class="docutils literal">is_removable()</tt></h1>
+<pre class="code python literal-block">
+<span class="c"># agreements.py                                  (imperative shell)</span>
+
+<span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="n">assignment_id</span><span class="p">):</span>
+    <span class="n">agreement</span> <span class="o">=</span> <span class="n">EndUserAgreement</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+    <span class="n">all_agreements</span> <span class="o">=</span> <span class="n">EndUserAgreement</span><span class="o">.</span><span class="n">query</span>
+
+    <span class="n">removable</span><span class="p">,</span> <span class="n">reason</span> <span class="o">=</span> <span class="n">is_removable</span><span class="p">(</span><span class="n">agreement</span><span class="p">,</span> <span class="n">all_agreements</span><span class="p">)</span>
+
+    <span class="c"># date adjustments temporariliy elided…</span>
+
+    <span class="k">if</span> <span class="n">removable</span><span class="p">:</span>
+        <span class="n">agreement</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">removable</span><span class="p">,</span> <span class="n">reason</span>
+</pre>
+</div>
+<div class="section" id="id78">
+
+<p>Notice the pivot</p>
+</div>
+<div class="section" id="id79">
+
+<p><tt class="docutils literal">agreement.delete()</tt> is a mutation applied to a persisted (dependent) object</p>
+</div>
+<div class="section" id="id80">
+
+<p>whereas</p>
+</div>
+<div class="section" id="id81">
+
+<p><tt class="docutils literal">is_removable()</tt> is logic that can be applied to a simple data structure</p>
+</div>
+<div class="section" id="id82">
+
+<p>Build systems around</p>
+<p><strong>functional transforms</strong></p>
+<p>of <em>simple values</em> and <em>data structures</em></p>
+</div>
+<div class="section" id="id83">
+
+<p>What do we mean by</p>
+<p><em>simple values</em> and <em>data structures</em></p>
+</div>
+<div class="section" id="id84">
+
+<ul class="simple">
+<li>atomic types: <tt class="docutils literal">str</tt>, <tt class="docutils literal">int</tt>, …</li>
+<li>structs or records</li>
+<li>collections of same: <tt class="docutils literal">list</tt>, <tt class="docutils literal">set</tt>, <tt class="docutils literal">dict</tt></li>
+</ul>
+</div>
+<div class="section" id="id85">
+
+<p>Litmus test: <tt class="docutils literal">is_removable()</tt> should work on a plain, non-ORM object</p>
+</div>
+<div class="section" id="id86">
+
+<pre class="code python literal-block">
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Agreement</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s">'Agreement'</span><span class="p">,</span> <span class="s">'start_date end_date'</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="id87">
+
+<pre class="code python literal-block">
+<span class="c"># agreements_core.py                               (functional core)</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">is_removable</span><span class="p">(</span><span class="n">agreement</span><span class="p">,</span> <span class="n">all_agreements</span><span class="p">):</span>
+<span class="o">...</span>     <span class="k">assert</span> <span class="n">agreement</span> <span class="ow">and</span> <span class="n">agreement</span> <span class="ow">in</span> <span class="n">all_agreements</span>
+<span class="o">...</span>
+<span class="o">...</span>     <span class="k">if</span> <span class="n">agreement</span><span class="o">.</span><span class="n">start_date</span> <span class="o">&lt;=</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">():</span>
+<span class="o">...</span>         <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="s">'already_active'</span>
+<span class="o">...</span>     <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_agreements</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+<span class="o">...</span>         <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="s">'only_agreement'</span>
+<span class="o">...</span>     <span class="k">else</span><span class="p">:</span>
+<span class="o">...</span>         <span class="k">return</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">None</span>
+</pre>
+</div>
+<div class="section" id="id88">
+
+<pre class="code python literal-block">
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">date</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">only_agreement</span> <span class="o">=</span> <span class="n">Agreement</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">(),</span> <span class="bp">None</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">removable</span><span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="n">is_removable</span><span class="p">(</span><span class="n">only_agreement</span><span class="p">,</span> <span class="p">[</span><span class="n">only_agreement</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">removable</span>
+<span class="bp">False</span>
+</pre>
+</div>
+<div class="section" id="id89">
+
+<pre class="code python literal-block">
+<span class="o">&gt;&gt;&gt;</span> <span class="n">really_planning_ahead</span> <span class="o">=</span> <span class="n">date</span><span class="p">(</span><span class="mi">3025</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">current_agreement</span> <span class="o">=</span> <span class="n">Agreement</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">(),</span> <span class="n">really_planning_ahead</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">next_agreement</span> <span class="o">=</span> <span class="n">Agreement</span><span class="p">(</span><span class="n">really_planning_ahead</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">removable</span><span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="n">is_removable</span><span class="p">(</span><span class="n">next_agreement</span><span class="p">,</span> <span class="p">[</span><span class="n">current_agreement</span><span class="p">,</span>
+<span class="o">...</span>                                                   <span class="n">next_agreement</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">removable</span>
+<span class="bp">True</span>
+</pre>
+</div>
+<div class="section" id="id90">
+
+<p>But don’t we still have decisions in the shell?</p>
+</div>
+<div class="section" id="id91">
+
+<pre class="code python literal-block">
+<span class="c"># agreements.py                                  (imperative shell)</span>
+
+<span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="n">assignment_id</span><span class="p">):</span>
+    <span class="n">agreement</span> <span class="o">=</span> <span class="n">EndUserAgreement</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+    <span class="n">all_agreements</span> <span class="o">=</span> <span class="n">EndUserAgreement</span><span class="o">.</span><span class="n">query</span>
+
+    <span class="n">removable</span><span class="p">,</span> <span class="n">reason</span> <span class="o">=</span> <span class="n">is_removable</span><span class="p">(</span><span class="n">agreement</span><span class="p">,</span> <span class="n">all_agreements</span><span class="p">)</span>
+
+    <span class="c"># date adjustments temporariliy elided…</span>
+
+    <span class="k">if</span> <span class="n">removable</span><span class="p">:</span>
+        <span class="n">agreement</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">removable</span><span class="p">,</span> <span class="n">reason</span>
+</pre>
+</div>
+<div class="section" id="id92">
+
+<p><em>Practicality</em> beats <strong>purity</strong></p>
+</div>
+<div class="section" id="id93">
+
+<p>I might just leave this</p>
+</div>
+<div class="section" id="id94">
+
+<p>The <em>decision</em> was made in the core;</p>
+<p>the shell is merely <em>acting on</em> that decision</p>
+</div>
+<div class="section" id="id95">
+
+<p>However</p>
+</div>
+<div class="section" id="id96">
+
+<p>That’s a pretty fine distinction…</p>
+</div>
+<div class="section" id="id97">
+
+<p>you can’t always rationalize this way</p>
+</div>
+<div class="section" id="id98">
+
+<p>which leads to</p>
+</div>
+<div class="section" id="pattern-2-callbacks">
+<h1>Pattern 2: Callbacks</h1>
+<pre class="code python literal-block">
+<span class="c"># agreements.py (step 2)                          (imperative shell)</span>
+
+<span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="n">assignment_id</span><span class="p">):</span>
+    <span class="n">agreement</span> <span class="o">=</span> <span class="n">EndUserAgreement</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+    <span class="n">all_agreements</span> <span class="o">=</span> <span class="n">EndUserAgreement</span><span class="o">.</span><span class="n">query</span>
+
+    <span class="n">removable</span><span class="p">,</span> <span class="n">reason</span> <span class="o">=</span> <span class="n">is_removable</span><span class="p">(</span><span class="n">agreement</span><span class="p">,</span> <span class="n">all_agreements</span><span class="p">,</span>
+                                     <span class="n">remove_callback</span><span class="o">=</span><span class="n">agreement</span><span class="o">.</span><span class="n">delete</span><span class="p">)</span>
+
+    <span class="c"># date adjustments temporariliy elided…</span>
+
+    <span class="k">return</span> <span class="n">removable</span><span class="p">,</span> <span class="n">reason</span>
+</pre>
+</div>
+<div class="section" id="id99">
+
+<pre class="code python literal-block">
+<span class="c"># agreements_core.py (step 2)                      (functional core)</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">is_removable</span><span class="p">(</span><span class="n">agreement</span><span class="p">,</span> <span class="n">all_agreements</span><span class="p">,</span> <span class="n">remove_callback</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<span class="o">...</span>     <span class="k">assert</span> <span class="n">agreement</span> <span class="ow">and</span> <span class="n">agreement</span> <span class="ow">in</span> <span class="n">all_agreements</span>
+<span class="o">...</span>
+<span class="o">...</span>     <span class="k">if</span> <span class="n">agreement</span><span class="o">.</span><span class="n">start_date</span> <span class="o">&lt;=</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">():</span>
+<span class="o">...</span>         <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="s">'already_active'</span>
+<span class="o">...</span>     <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_agreements</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+<span class="o">...</span>         <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="s">'only_agreement'</span>
+<span class="o">...</span>     <span class="k">else</span><span class="p">:</span>
+<span class="o">...</span>         <span class="n">remove_callback</span><span class="p">()</span> <span class="k">if</span> <span class="n">remove_callback</span> <span class="k">else</span> <span class="bp">None</span>
+<span class="o">...</span>         <span class="k">return</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">None</span>
+</pre>
+</div>
+<div class="section" id="id100">
+
+<p>Callbacks can help bridge boundary gaps
+between</p>
+<p><strong>lower-level mechanisms</strong> (web, db)</p>
+<p>and higher level <em>policy layers</em></p>
+</div>
+<div class="section" id="id101">
+
+<p><em>without</em> coupling policies to mechanisms</p>
+</div>
+<div class="section" id="id102">
+
+<p>Callbacks are excellent for</p>
+<p><strong>limiting</strong></p>
+<p>the <em>required change surface</em></p>
+</div>
+<div class="section" id="id103">
+
+<p>Quick example: what exam types are available to a candidate?</p>
+</div>
+<div class="section" id="id104">
+
+<pre class="code python literal-block">
+<span class="k">def</span> <span class="nf">available_types</span><span class="p">(</span><span class="n">all_types</span><span class="p">,</span> <span class="err">…</span><span class="p">,</span> <span class="n">check_functions</span><span class="o">=</span><span class="p">()):</span>
+    <span class="c"># other checks…</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">exam_type</span> <span class="k">for</span> <span class="n">exam_type</span> <span class="ow">in</span> <span class="n">all_types</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">fn</span><span class="p">(</span><span class="n">exam_type</span><span class="p">)</span> <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="n">check_functions</span><span class="p">)]</span>
+</pre>
+<p>If any check function returns an error message, the type is unavalable
+to the candidate.</p>
+</div>
+<div class="section" id="id105">
+
+<p>Example check: organization credit hold</p>
+<pre class="code python literal-block">
+<span class="k">def</span> <span class="nf">registration_open</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exam_type</span><span class="p">):</span>
+    <span class="n">organization</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">candidate</span><span class="o">.</span><span class="n">organization</span>
+
+    <span class="k">if</span> <span class="n">organization</span><span class="o">.</span><span class="n">registration_blocked</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">candidate</span><span class="p">,</span> <span class="n">exam_type</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">'registration_blocked_org_credit_hold'</span>
+</pre>
+</div>
+<div class="section" id="id106">
+
+<p>When I did this particular refactor, I was working on</p>
+<p><em>applications</em></p>
+<p><em>Organizations</em> are two subsystems away…</p>
+</div>
+<div class="section" id="id107">
+
+<p>The check function callback allowed me to</p>
+<p><strong>circumscribe</strong></p>
+<p>how much I needed to change</p>
+</div>
+<div class="section" id="id108">
+
+<p>“I will refactor <em>applications</em>, and no further”</p>
+</div>
+<div class="section" id="id109">
+
+<p><tt class="docutils literal">available_types()</tt> is still a <em>pure function</em>,</p>
+<p>testable with <strong>just data</strong></p>
+</div>
+<div class="section" id="id110">
+
+<pre class="code python literal-block">
+<span class="k">def</span> <span class="nf">test_exam_type_available_if_check_is_false</span><span class="p">():</span>
+    <span class="n">exam_type</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
+    <span class="n">check_function</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">exam_type</span><span class="p">:</span> <span class="bp">None</span>
+
+    <span class="k">assert</span> <span class="n">exam_type</span> <span class="ow">in</span> \
+        <span class="n">available_types</span><span class="p">([</span><span class="n">exam_type</span><span class="p">],</span> <span class="n">check_functions</span><span class="o">=</span><span class="p">[</span><span class="n">check_function</span><span class="p">])</span>
+
+<span class="k">def</span> <span class="nf">test_exam_type_not_available_if_check_is_true</span><span class="p">():</span>
+    <span class="n">exam_type</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
+    <span class="n">check_function</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">exam_type</span><span class="p">:</span> <span class="s">'I_dont_think_so'</span>
+
+    <span class="k">assert</span> <span class="n">exam_type</span> <span class="ow">not</span> <span class="ow">in</span> \
+        <span class="n">available_types</span><span class="p">([</span><span class="n">exam_type</span><span class="p">],</span> <span class="n">check_functions</span><span class="o">=</span><span class="p">[</span><span class="n">check_function</span><span class="p">])</span>
+</pre>
+</div>
+<div class="section" id="id111">
+
+<p>Callbacks are a <em>powerful tool</em></p>
+</div>
+<div class="section" id="id112">
+
+<p>but easy to <strong>overuse</strong></p>
+</div>
+<div class="section" id="id113">
+
+<p>Keep calm</p>
+<p>and</p>
+<p>apply judiciously</p>
+</div>
+<div class="section" id="id114">
+
+</div>
+<div class="section" id="id115">
+
+<p>So where were we?</p>
+</div>
+<div class="section" id="id116">
+
+<pre class="code python literal-block">
+<span class="c"># agreements.py (step 2)                          (imperative shell)</span>
+
+<span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="n">assignment_id</span><span class="p">):</span>
+    <span class="n">agreement</span> <span class="o">=</span> <span class="n">EndUserAgreement</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+    <span class="n">all_agreements</span> <span class="o">=</span> <span class="n">EndUserAgreement</span><span class="o">.</span><span class="n">query</span>
+
+    <span class="n">removable</span><span class="p">,</span> <span class="n">reason</span> <span class="o">=</span> <span class="n">is_removable</span><span class="p">(</span><span class="n">agreement</span><span class="p">,</span> <span class="n">all_agreements</span><span class="p">,</span>
+                                     <span class="n">remove_callback</span><span class="o">=</span><span class="n">agreement</span><span class="o">.</span><span class="n">delete</span><span class="p">)</span>
+
+    <span class="c"># date adjustments temporariliy elided…</span>
+
+    <span class="k">return</span> <span class="n">removable</span><span class="p">,</span> <span class="n">reason</span>
+</pre>
+</div>
+<div class="section" id="id117">
+
+<p>With the date adjustments</p>
+<pre class="code python literal-block">
+<span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="n">assignment_id</span><span class="p">):</span>
+    <span class="n">agreement</span> <span class="o">=</span> <span class="n">EndUserAgreement</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+    <span class="n">all_agreements</span> <span class="o">=</span> <span class="n">EndUserAgreement</span><span class="o">.</span><span class="n">query</span>
+
+    <span class="n">removable</span><span class="p">,</span> <span class="n">reason</span> <span class="o">=</span> <span class="n">is_removable</span><span class="p">(</span><span class="n">agreement</span><span class="p">,</span> <span class="n">all_agreements</span><span class="p">,</span>
+                                     <span class="n">remove_callback</span><span class="o">=</span><span class="n">agreement</span><span class="o">.</span><span class="n">delete</span><span class="p">)</span>
+
+    <span class="c"># In order to ensure there are no gaps in agreements, …</span>
+    <span class="n">previous_agreement</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_previous</span><span class="p">(</span><span class="n">agreement</span><span class="o">.</span><span class="n">start_date</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">previous_agreement</span><span class="p">:</span>
+        <span class="n">previous_agreement</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="n">agreement</span><span class="o">.</span><span class="n">end_date</span>
+    <span class="k">elif</span> <span class="n">agreement</span><span class="o">.</span><span class="n">end_date</span><span class="p">:</span>
+        <span class="c"># If the deleted agreement was the first one, then we find…</span>
+        <span class="n">next_agreement</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_next</span><span class="p">(</span><span class="n">agreement</span><span class="o">.</span><span class="n">start_date</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">next_agreement</span><span class="p">:</span>
+            <span class="n">next_agreement</span><span class="o">.</span><span class="n">start_date</span> <span class="o">=</span> <span class="n">agreement</span><span class="o">.</span><span class="n">start_date</span>
+
+    <span class="k">return</span> <span class="n">removable</span><span class="p">,</span> <span class="n">reason</span>
+</pre>
+</div>
+<div class="section" id="id118">
+
+<p>Challenge: disentangle the mutation from the rules</p>
+</div>
+<div class="section" id="id119">
+
+<p>Rules</p>
+<ul class="simple">
+<li>what should be updated</li>
+<li>how it should be updated</li>
+</ul>
+</div>
+<div class="section" id="pattern-3-delegated-value">
+<h1>Pattern 3: Delegated value</h1>
+<p>Shell assigns a value computed by the core</p>
+</div>
+<div class="section" id="id120">
+
+<pre class="code python literal-block">
+<span class="c"># agreements.py (step 3)                          (imperative shell)</span>
+
+<span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="n">assignment_id</span><span class="p">):</span>
+    <span class="n">agreement</span> <span class="o">=</span> <span class="n">EndUserAgreement</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+    <span class="n">all_agreements</span> <span class="o">=</span> <span class="n">EndUserAgreement</span><span class="o">.</span><span class="n">query</span>
+
+    <span class="k">def</span> <span class="nf">on_remove</span><span class="p">():</span>
+        <span class="n">agreement</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="n">adjust_dates</span><span class="p">(</span><span class="n">minimum_start_date</span><span class="o">=</span><span class="n">agreement</span><span class="o">.</span><span class="n">start_date</span><span class="p">)</span>
+
+    <span class="n">removable</span><span class="p">,</span> <span class="n">reason</span> <span class="o">=</span> <span class="n">is_removable</span><span class="p">(</span><span class="n">agreement</span><span class="p">,</span> <span class="n">all_agreements</span><span class="p">,</span>
+                                     <span class="n">remove_callback</span><span class="o">=</span><span class="n">on_remove</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">removable</span><span class="p">,</span> <span class="n">reason</span>
+</pre>
+</div>
+<div class="section" id="id121">
+
+<pre class="code python literal-block">
+<span class="c"># agreements.py (step 3)                          (imperative shell)</span>
+
+<span class="k">def</span> <span class="nf">adjust_dates</span><span class="p">(</span><span class="n">minimum_start_date</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">all_agreements</span> <span class="o">=</span> <span class="n">EndUserAgreement</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">'start_date'</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">agreement</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="ow">in</span> <span class="n">mind_the_gap</span><span class="p">(</span><span class="n">all_agreements</span><span class="p">,</span>
+                                              <span class="n">minimum_start_date</span><span class="p">):</span>
+        <span class="n">agreement</span><span class="o">.</span><span class="n">start_date</span> <span class="o">=</span> <span class="n">start</span>
+        <span class="n">agreement</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="n">end</span>
+</pre>
+</div>
+<div class="section" id="id122">
+
+<p>Find ordered pairs of agreements with gaps between them…</p>
+<pre class="code python literal-block">
+<span class="k">def</span> <span class="nf">adjust_dates</span><span class="p">(</span><span class="n">minimum_start_date</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">all_agreements</span> <span class="o">=</span> <span class="n">EndUserAgreement</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">'start_date'</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">agreement</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="ow">in</span> <span class="n">mind_the_gap</span><span class="p">(</span><span class="n">all_agreements</span><span class="p">,</span>
+                                              <span class="n">minimum_start_date</span><span class="p">):</span>
+        <span class="c"># …</span>
+</pre>
+</div>
+<div class="section" id="id123">
+
+<div class="line-block">
+<div class="line">and for each,</div>
+<div class="line">update its dates</div>
+<div class="line">as indicated by the core</div>
+</div>
+<pre class="code python literal-block">
+<span class="k">def</span> <span class="nf">adjust_dates</span><span class="p">(</span><span class="n">minimum_start_date</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">agreement</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="ow">in</span> <span class="err">…</span><span class="p">:</span>
+        <span class="n">agreement</span><span class="o">.</span><span class="n">start_date</span> <span class="o">=</span> <span class="n">start</span>
+        <span class="n">agreement</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="n">end</span>
+</pre>
+</div>
+<div class="section" id="id124">
+
+<p>The core implements the rules</p>
+<ul class="simple">
+<li>which agreements need to be updated</li>
+<li>what the new dates should be</li>
+</ul>
+</div>
+<div class="section" id="id125">
+
+<p>a little <tt class="docutils literal">itertools</tt> help (from stdlib docs)</p>
+<pre class="code python literal-block">
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">izip</span><span class="p">,</span> <span class="n">tee</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">pairwise</span><span class="p">(</span><span class="n">iterable</span><span class="p">):</span>
+<span class="o">...</span>     <span class="s">&quot;s -&gt; (s0,s1), (s1,s2), (s2, s3), ...&quot;</span>
+<span class="o">...</span>     <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">tee</span><span class="p">(</span><span class="n">iterable</span><span class="p">)</span>
+<span class="o">...</span>     <span class="nb">next</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+<span class="o">...</span>     <span class="k">return</span> <span class="n">izip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="id126">
+
+<pre class="code python literal-block">
+<span class="c"># agreements_core.py (step 3)                      (functional core)</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">mind_the_gap</span><span class="p">(</span><span class="n">sorted_agreements</span><span class="p">,</span> <span class="n">minimum_start_date</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<span class="o">...</span>     <span class="n">first</span> <span class="o">=</span> <span class="n">sorted_agreements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="o">...</span>
+<span class="o">...</span>     <span class="k">if</span> <span class="n">minimum_start_date</span> <span class="ow">and</span> <span class="n">first</span><span class="o">.</span><span class="n">start_date</span> <span class="o">&gt;</span> <span class="n">minimum_start_date</span><span class="p">:</span>
+<span class="o">...</span>         <span class="k">yield</span> <span class="n">first</span><span class="p">,</span> <span class="n">minimum_start_date</span><span class="p">,</span> <span class="n">first</span><span class="o">.</span><span class="n">end_date</span>
+<span class="o">...</span>
+<span class="o">...</span>     <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">pairwise</span><span class="p">(</span><span class="n">sorted_agreements</span><span class="p">):</span>
+<span class="o">...</span>         <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">end_date</span> <span class="o">&lt;</span> <span class="n">b</span><span class="o">.</span><span class="n">start_date</span><span class="p">:</span>
+<span class="o">...</span>             <span class="k">yield</span> <span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">start_date</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">start_date</span>
+</pre>
+<!-- slide -->
+<!-- - - - - - -->
+<!-- <tests here> -->
+<!-- slide -->
+<!-- - - - - - -->
+</div>
+<div class="section" id="id127">
+
+<p>Stepping back</p>
+</div>
+<div class="section" id="id128">
+
+<p>We started here</p>
+</div>
+<div class="section" id="id129">
+
+<pre class="code python literal-block">
+<span class="nd">&#64;expose</span><span class="p">()</span>
+<span class="nd">&#64;identity.require</span><span class="p">(</span><span class="n">identity</span><span class="o">.</span><span class="n">has_permission</span><span class="p">(</span><span class="s">'agreement_delete'</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="n">agreement</span> <span class="o">=</span> <span class="n">EndUserAgreement</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">agreement</span><span class="o">.</span><span class="n">start_date</span> <span class="o">&lt;=</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">():</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">'success'</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span> <span class="s">'msg'</span><span class="p">:</span> <span class="s">'&lt;already active msg&gt;'</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">EndUserAgreement</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">'success'</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span> <span class="s">'msg'</span><span class="p">:</span> <span class="s">'&lt;only agreement msg&gt;'</span><span class="p">}</span>
+
+    <span class="c"># In order to ensure there are no gaps in agreements, …</span>
+    <span class="n">previous_agreement</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_previous</span><span class="p">(</span><span class="n">agreement</span><span class="o">.</span><span class="n">start_date</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">previous_agreement</span><span class="p">:</span>
+        <span class="n">previous_agreement</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="n">agreement</span><span class="o">.</span><span class="n">end_date</span>
+    <span class="k">elif</span> <span class="n">agreement</span><span class="o">.</span><span class="n">end_date</span><span class="p">:</span>
+        <span class="c"># If the deleted agreement was the first one, then we find…</span>
+        <span class="n">next_agreement</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_next</span><span class="p">(</span><span class="n">agreement</span><span class="o">.</span><span class="n">start_date</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">next_agreement</span><span class="p">:</span>
+            <span class="n">next_agreement</span><span class="o">.</span><span class="n">start_date</span> <span class="o">=</span> <span class="n">agreement</span><span class="o">.</span><span class="n">start_date</span>
+
+    <span class="n">agreement</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">'success'</span><span class="p">:</span> <span class="bp">True</span><span class="p">}</span>
+</pre>
+</div>
+<div class="section" id="id130">
+
+<p>mixed responsibilities</p>
+<p>unclear rules</p>
+<p>monolithic expression of intent</p>
+</div>
+<div class="section" id="id131">
+
+<p>Practically untestable</p>
+</div>
+<div class="section" id="id132">
+
+<p>Our functional core</p>
+<pre class="code python literal-block">
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">is_removable</span><span class="p">(</span><span class="n">agreement</span><span class="p">,</span> <span class="n">all_agreements</span><span class="p">,</span> <span class="n">remove_callback</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<span class="o">...</span>     <span class="k">assert</span> <span class="n">agreement</span> <span class="ow">and</span> <span class="n">agreement</span> <span class="ow">in</span> <span class="n">all_agreements</span>
+<span class="o">...</span>
+<span class="o">...</span>     <span class="k">if</span> <span class="n">agreement</span><span class="o">.</span><span class="n">start_date</span> <span class="o">&lt;=</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">():</span>
+<span class="o">...</span>         <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="s">'already_active'</span>
+<span class="o">...</span>     <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_agreements</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+<span class="o">...</span>         <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="s">'only_agreement'</span>
+<span class="o">...</span>     <span class="k">else</span><span class="p">:</span>
+<span class="o">...</span>         <span class="n">remove_callback</span><span class="p">()</span> <span class="k">if</span> <span class="n">remove_callback</span> <span class="k">else</span> <span class="bp">None</span>
+<span class="o">...</span>         <span class="k">return</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">None</span>
+</pre>
+</div>
+<div class="section" id="id133">
+
+<p>Functional core (cont.)</p>
+<pre class="code python literal-block">
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">mind_the_gap</span><span class="p">(</span><span class="n">sorted_agreements</span><span class="p">,</span> <span class="n">minimum_start_date</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<span class="o">...</span>     <span class="n">first</span> <span class="o">=</span> <span class="n">sorted_agreements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="o">...</span>
+<span class="o">...</span>     <span class="k">if</span> <span class="n">minimum_start_date</span> <span class="ow">and</span> <span class="n">first</span><span class="o">.</span><span class="n">start_date</span> <span class="o">&gt;</span> <span class="n">minimum_start_date</span><span class="p">:</span>
+<span class="o">...</span>         <span class="k">yield</span> <span class="n">first</span><span class="p">,</span> <span class="n">minimum_start_date</span><span class="p">,</span> <span class="n">first</span><span class="o">.</span><span class="n">end_date</span>
+<span class="o">...</span>
+<span class="o">...</span>     <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">pairwise</span><span class="p">(</span><span class="n">sorted_agreements</span><span class="p">):</span>
+<span class="o">...</span>         <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">end_date</span> <span class="o">&lt;</span> <span class="n">b</span><span class="o">.</span><span class="n">start_date</span><span class="p">:</span>
+<span class="o">...</span>             <span class="k">yield</span> <span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">start_date</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">start_date</span>
+</pre>
+</div>
+<div class="section" id="id134">
+
+<div class="line-block">
+<div class="line">Eminently readable</div>
+<div class="line">because each function remains at a</div>
+<div class="line"><em>single level of abstraction</em></div>
+</div>
+</div>
+<div class="section" id="id135">
+
+<pre class="code python literal-block">
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">is_removable</span><span class="p">(</span><span class="n">agreement</span><span class="p">,</span> <span class="n">all_agreements</span><span class="p">,</span> <span class="n">remove_callback</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<span class="o">...</span>     <span class="k">assert</span> <span class="n">agreement</span> <span class="ow">and</span> <span class="n">agreement</span> <span class="ow">in</span> <span class="n">all_agreements</span>
+<span class="o">...</span>
+<span class="o">...</span>     <span class="k">if</span> <span class="n">agreement</span><span class="o">.</span><span class="n">start_date</span> <span class="o">&lt;=</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">():</span>
+<span class="o">...</span>         <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="s">'already_active'</span>
+<span class="o">...</span>     <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_agreements</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+<span class="o">...</span>         <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="s">'only_agreement'</span>
+<span class="o">...</span>     <span class="k">else</span><span class="p">:</span>
+<span class="o">...</span>         <span class="n">remove_callback</span><span class="p">()</span> <span class="k">if</span> <span class="n">remove_callback</span> <span class="k">else</span> <span class="bp">None</span>
+<span class="o">...</span>         <span class="k">return</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">None</span>
+</pre>
+</div>
+<div class="section" id="id136">
+
+<p>Easily testable using <em>simple data structures</em></p>
+</div>
+<div class="section" id="id137">
+
+<ul class="simple">
+<li>no special setup</li>
+<li>test calls are symmetric with production calls</li>
+</ul>
+</div>
+<div class="section" id="id138">
+
+<p>Clear assignment of responsibilities</p>
+<ul class="simple">
+<li>Core → logic</li>
+<li>Shell → dependencies</li>
+<li>Endpoint → dispatch</li>
+</ul>
+</div>
+<div class="section" id="id139">
+
+<p>FauxO interface provides a</p>
+<p><em>familiar façade</em></p>
+<p>to the rest of the system</p>
+</div>
+<div class="section" id="id140">
+
+<p>Our HTTP endpoint</p>
+<pre class="code python literal-block">
+<span class="nd">&#64;expose</span><span class="p">()</span>
+<span class="nd">&#64;identity.require</span><span class="p">(</span><span class="n">identity</span><span class="o">.</span><span class="n">has_permission</span><span class="p">(</span><span class="s">'agreement_delete'</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="n">success</span><span class="p">,</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">agreements</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">'success'</span><span class="p">:</span> <span class="n">success</span><span class="p">,</span> <span class="s">'msg'</span><span class="p">:</span> <span class="n">msg</span><span class="p">}</span>
+</pre>
+</div>
+<div class="section" id="id141">
+
+<p>Callbacks provide</p>
+<p><em>boundaries</em>,</p>
+<p>limiting what we’re required to touch</p>
+</div>
+<div class="section" id="id142">
+
+<p>Callbacks allow the core to direct the shell…</p>
+</div>
+<div class="section" id="id143">
+
+<p><em>without</em> coupling the shell to it</p>
+</div>
+<div class="section" id="id144">
+
+<p>Our imperative shell</p>
+<pre class="code python literal-block">
+<span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="n">assignment_id</span><span class="p">):</span>
+    <span class="n">agreement</span> <span class="o">=</span> <span class="n">EndUserAgreement</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+    <span class="n">all_agreements</span> <span class="o">=</span> <span class="n">EndUserAgreement</span><span class="o">.</span><span class="n">query</span>
+
+    <span class="k">def</span> <span class="nf">on_remove</span><span class="p">():</span>
+        <span class="n">agreement</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="n">adjust_dates</span><span class="p">(</span><span class="n">minimum_start_date</span><span class="o">=</span><span class="n">agreement</span><span class="o">.</span><span class="n">start_date</span><span class="p">)</span>
+
+    <span class="n">removable</span><span class="p">,</span> <span class="n">reason</span> <span class="o">=</span> <span class="n">is_removable</span><span class="p">(</span><span class="n">agreement</span><span class="p">,</span> <span class="n">all_agreements</span><span class="p">,</span>
+                                     <span class="n">remove_callback</span><span class="o">=</span><span class="n">on_remove</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">removable</span><span class="p">,</span> <span class="n">reason</span>
+</pre>
+</div>
+<div class="section" id="id145">
+
+<p>Imperative shell (cont.)</p>
+<pre class="code python literal-block">
+<span class="k">def</span> <span class="nf">adjust_dates</span><span class="p">(</span><span class="n">minimum_start_date</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">all_agreements</span> <span class="o">=</span> <span class="n">EndUserAgreement</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">'start_date'</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">agreement</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="ow">in</span> <span class="n">mind_the_gap</span><span class="p">(</span><span class="n">all_agreements</span><span class="p">,</span>
+                                              <span class="n">minimum_start_date</span><span class="p">):</span>
+        <span class="n">agreement</span><span class="o">.</span><span class="n">start_date</span> <span class="o">=</span> <span class="n">start</span>
+        <span class="n">agreement</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="n">end</span>
+</pre>
+</div>
+<div class="section" id="id146">
+
+<p>This example is from a</p>
+<p><em>real system</em></p>
+<p>that serves</p>
+<p><em>real HTML</em>!</p>
+</div>
+<div class="section" id="id147">
+
+<p>No ivory tower constructions here</p>
+</div>
+<div class="section" id="id148">
+
+<p>Is it <strong>easy</strong>? Perhaps not…</p>
+</div>
+<div class="section" id="id149">
+
+<p>Is it worth it?</p>
+</div>
+<div class="section" id="absolutely">
+<h1>Absolutely</h1>
+</div>
+<div class="section" id="id150">
+
+</div>
+<div class="section" id="id151">
+
+<p>T.S. Eliot</p>
+</div>
+<div class="section" id="id152">
+
+<blockquote>
+Immature poets imitate;</blockquote>
+</div>
+<div class="section" id="id153">
+
+<blockquote>
+<p>Immature poets imitate;</p>
+<p>mature poets <em>steal</em></p>
+<p class="attribution">&mdash;T.S. Eliot</p>
+</blockquote>
+</div>
+<div class="section" id="id154">
+
+<p>Special thanks to</p>
+<p>Brandon Rhodes the Great</p>
+<p>from whom I’ve stolen many ideas over the years</p>
+</div>
+<div class="section" id="id155">
+
+<p>Thank you!</p>
+</div>
+<div class="section" id="id156">
+
+<p>♥</p>
+<p>&#64;drocco007</p>
+<!-- single quote: ’
+double quotes: x“”x
+em-dash: —
+vertical ellipsis: ⋮
+arrows: ←, ↑, →, ↓, ↔, ↕, ↖, ↗, ↘, ↙ -->
+<script>
+    window.slide_transition_time = 200;
+</script>
+<script src="static/jquery-1.6.2.min.js"></script>
+<script src="static/jquery.url.min.js"></script>
+<script src="static/slides2.js"></script></div>
+</div>
+</body>
+</html>
