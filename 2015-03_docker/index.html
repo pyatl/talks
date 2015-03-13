@@ -1,0 +1,719 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.12: http://docutils.sourceforge.net/" />
+<title></title>
+<link rel="stylesheet" href="static/pygments.css" type="text/css" />
+<link rel="stylesheet" href="static/slides2.css" type="text/css" />
+</head>
+<body class="reading-mode">
+<div class="document">
+
+
+<div class="section" id="docker-for-developers">
+<h1>Docker for Developers</h1>
+<div class="line-block">
+<div class="line">PyAtl — March 12, 2015</div>
+<div class="line">&#64;drocco007</div>
+</div>
+</div>
+<div class="section" id="slide">
+
+<p>What is Docker?</p>
+<img alt="static/docker.png" src="static/docker.png" />
+</div>
+<div class="section" id="id1">
+
+<blockquote>
+<p>Docker is an open platform for developers and sysadmins to build,
+ship, and run distributed applications</p>
+<p class="attribution">&mdash;Docker docs</p>
+</blockquote>
+</div>
+<div class="section" id="id2">
+
+<p>(uh, ok…)</p>
+</div>
+<div class="section" id="id3">
+
+<p>Better question: <em>why do I care?</em></p>
+</div>
+<div class="section" id="id4">
+
+<p>Ideal: our <em>development</em> environment</p>
+<p><strong>matches</strong></p>
+<p>our <em>deployed</em> environment</p>
+</div>
+<div class="section" id="id5">
+
+<p>Reality check</p>
+</div>
+<div class="section" id="id6">
+
+<pre class="literal-block">
+ELB → nginx  → app server → DB (RDS)
+        ↓    ↘           ↗
+      static   store server
+      content
+</pre>
+</div>
+<div class="section" id="id7">
+
+<p>I could run all of these on my development machine…</p>
+</div>
+<div class="section" id="id8">
+
+<p>What if I have <em>multiple clients</em>?</p>
+</div>
+<div class="section" id="id9">
+
+<p>(hint: I do! ;)</p>
+</div>
+<div class="section" id="id10">
+
+<p>Each has their own</p>
+<ul class="simple">
+<li>DB configuration</li>
+<li>proxy set up</li>
+<li>app/store configuration</li>
+</ul>
+</div>
+<div class="section" id="id11">
+
+<p>Maintaining these on a single shared server is challenging…</p>
+</div>
+<div class="section" id="id12">
+
+<p>and only <strong>approximates</strong> production</p>
+</div>
+<div class="section" id="id13">
+
+<p>Our environment</p>
+<ul class="simple">
+<li>My box: Ubuntu 14.10, PG 9.3 (client only), Python 2.7.8</li>
+<li>Staging DB: Ubuntu 12.04, PG 9.3.5, Python 2.7.3</li>
+<li>Staging App Server: Ubuntu 12.04, PG 9.3.5, Python 2.7.3</li>
+<li>Production DB: Amazon RDS</li>
+<li>…</li>
+</ul>
+</div>
+<div class="section" id="id14">
+
+<p>This may not seem like a big deal…</p>
+</div>
+<div class="section" id="id15">
+
+<p>but <strong>packaging</strong></p>
+</div>
+<div class="section" id="id16">
+
+<p>Different vendor versions of common packages (e.g. requests)</p>
+</div>
+<div class="section" id="id17">
+
+<p>Installation of certain difficult packages</p>
+<p>(PIL, cElementTree)</p>
+<p>may require different handling</p>
+</div>
+<div class="section" id="id18">
+
+<p>In Python, we <em>virtualenv</em></p>
+</div>
+<div class="section" id="id19">
+
+<p>virtualenv provides a <em>virtualized</em> Python environment</p>
+</div>
+<div class="section" id="id20">
+
+<p>Each virtualenv thinks it rules the roost</p>
+</div>
+<div class="section" id="id21">
+
+<p>virtualization → isolation → freedom</p>
+</div>
+<div class="section" id="id22">
+
+<pre class="code bash literal-block">
+<span class="nv">$ </span>pip list | grep requests
+requests <span class="o">(</span>2.3.0<span class="o">)</span>
+<span class="nv">$ </span>workon brighttrac
+<span class="o">(</span>brighttrac<span class="o">)</span> <span class="nv">$ </span>pip list | grep requests
+<span class="o">(</span>brighttrac<span class="o">)</span> <span class="nv">$ </span>workon talks
+<span class="o">(</span>talks<span class="o">)</span> <span class="nv">$ </span>pip list | grep requests
+requests <span class="o">(</span>2.5.1<span class="o">)</span>
+<span class="o">(</span>talks<span class="o">)</span> <span class="nv">$ </span>workon ibash
+<span class="o">(</span>ibash<span class="o">)</span> <span class="nv">$ </span>pip list | grep requests
+requests <span class="o">(</span>2.5.3<span class="o">)</span>
+<span class="o">(</span>ibash<span class="o">)</span> <span class="err">$</span>
+</pre>
+</div>
+<div class="section" id="id23">
+
+<p>We update each of our environments as circumstances dictate,</p>
+<p><strong>without fear</strong></p>
+<p>of breaking <em>anything else</em></p>
+</div>
+<div class="section" id="id24">
+
+<p>How do we do this <em>for applications</em>?</p>
+</div>
+<div class="section" id="id25">
+
+<p>Well, <em>what’s an application?</em></p>
+</div>
+<div class="section" id="id26">
+
+<p>Let’s talk about processes</p>
+</div>
+<div class="section" id="id27">
+
+<p>A process is just a <em>running program</em></p>
+</div>
+<div class="section" id="id28">
+
+<pre class="literal-block">
+                            CPU
+process                 ↗  Memory
+· program executable     →  Disk
+· PCB                   ↘  Network
+                            …
+</pre>
+</div>
+<div class="section" id="id29">
+
+<p>But modern operating systems do not allow</p>
+<p><strong>direct access</strong></p>
+<p>to system resources</p>
+</div>
+<div class="section" id="id30">
+
+<blockquote>
+<p>“All problems in computer science can be solved
+by another level of indirection”</p>
+<p class="attribution">&mdash;David Wheeler</p>
+</blockquote>
+</div>
+<div class="section" id="id31">
+
+<pre class="literal-block">
+                        K
+                        E       CPU
+process                 R   ↗  Memory
+· program executable →  N   →  Disk
+· PCB                   E   ↘  Network
+                        L       …
+</pre>
+</div>
+<div class="section" id="id32">
+
+<pre class="literal-block">
+            K
+process0    E       CPU
+process1    R   ↗  Memory
+process2    N    →  Disk
+process3    E   ↘  Network
+    ⋮      L       …
+</pre>
+</div>
+<div class="section" id="id33">
+
+<p>By forcing applications to use the kernel’s interface,
+modern operating systems offer</p>
+</div>
+<div class="section" id="id34">
+
+<p>process isolation</p>
+</div>
+<div class="section" id="id35">
+
+<p><em>What if we virtualized the kernel?</em></p>
+</div>
+<div class="section" id="id36">
+<h1>!!!</h1>
+</div>
+<div class="section" id="id37">
+
+<pre class="literal-block">
+            V
+process0  → I → CPU0, Memory0, Disk0, Network0
+process1  → R → CPU1, Memory1, Disk1, Network1
+process2  → T → CPU2, Memory2, Disk2, Network2
+process3  → U → CPU3, Memory3, Disk3, Network3
+    ⋮      A       …
+            L
+</pre>
+</div>
+<div class="section" id="docker">
+<h1>Docker</h1>
+</div>
+<div class="section" id="id38">
+
+<p>VM-like application isolation,</p>
+<p>process-like overhead</p>
+</div>
+<div class="section" id="id39">
+
+<p>via a virtualized Linux kernel</p>
+<p>(my definition)</p>
+</div>
+<div class="section" id="id40">
+
+<p>Each Docker container <em>thinks</em> it has its own</p>
+<p>CPU, memory, file system, network stack</p>
+</div>
+<div class="section" id="id41">
+
+<p>Docker is <em>fast</em></p>
+</div>
+<div class="section" id="id42">
+
+<p>Docker is <em>lightweight</em></p>
+</div>
+<div class="section" id="id43">
+
+<p>Docker containers are <em>miniature servers</em></p>
+</div>
+<div class="section" id="id44">
+
+<p>build, start, hook together, and tear down</p>
+<p>cheaply, efficiently, and portably</p>
+</div>
+<div class="section" id="id45">
+
+</div>
+<div class="section" id="id46">
+
+<p>Try it! Right now!</p>
+<p>(seriously!)</p>
+</div>
+<div class="section" id="id47">
+
+<p><a class="reference external" href="https://www.docker.com/tryit/">https://www.docker.com/tryit/</a></p>
+</div>
+<div class="section" id="id48">
+
+<p>Docker for Developers</p>
+</div>
+<div class="section" id="id49">
+
+<p>How can I work with my host setup and
+tools</p>
+<p><em>and</em></p>
+<p>have edits reflected in the running Docker containers?</p>
+</div>
+<div class="section" id="id50">
+
+<ul class="simple">
+<li>Docker 101</li>
+<li>Building development images (dockerkit)</li>
+<li>Managing Docker’s 8 million switches</li>
+<li>How do I even…? (and Cameron’s question)</li>
+</ul>
+</div>
+<div class="section" id="id51">
+
+<p>Docker concepts</p>
+<ul class="simple">
+<li>Container</li>
+<li>Link</li>
+<li>Image</li>
+<li>Volume</li>
+</ul>
+</div>
+<div class="section" id="id52">
+
+<p><em>container</em></p>
+<p>application process running inside a virtualized environment</p>
+</div>
+<div class="section" id="id53">
+
+<p>Simple example: busybox shell</p>
+<pre class="literal-block">
+$ docker run -it --rm busybox
+/ # ps ax
+PID   USER     COMMAND
+    1 root     /bin/sh
+    9 root     ps ax
+/ # ls /
+bin      dev      etc      home     lib      ...
+/ # ls /home
+default  ftp
+/ #
+</pre>
+</div>
+<div class="section" id="id54">
+
+<p>The containerized process shows up in the host’s process list:</p>
+<pre class="literal-block">
+17691 pts/11   Sl+    0:00 docker run -it --rm busybox
+17697 pts/12   Ss+    0:00 /bin/sh
+</pre>
+</div>
+<div class="section" id="id55">
+
+<p>All sorts of options for port forwarding, network connections, etc.</p>
+<pre class="literal-block">
+$ docker run -d -p 5432:5432 postgres
+736b803a915e83efd9d93e91d58dca2245bc515d3539727774a4495366bb9d0d
+$ docker logs 736b803a
+2015-03-12 04:21:47 UTC LOG:  database system was interrupted; last ...
+2015-03-12 04:21:47 UTC LOG:  database system was not properly shut ...
+2015-03-12 04:21:47 UTC LOG:  redo starts at 0/1783828
+2015-03-12 04:21:47 UTC LOG:  record with zero length at 0/1783868
+2015-03-12 04:21:47 UTC LOG:  redo done at 0/1783828
+2015-03-12 04:21:47 UTC LOG:  last completed transaction was at log ...
+2015-03-12 04:21:47 UTC LOG:  database system is ready to accept ...
+2015-03-12 04:21:47 UTC LOG:  autovacuum launcher started
+</pre>
+</div>
+<div class="section" id="id56">
+
+<p>(Did you catch that?</p>
+<p>Yup, I just created a Postgres server out of thin air… :)</p>
+</div>
+<div class="section" id="id57">
+
+<p>View running containers with <tt class="docutils literal">ps</tt>:</p>
+<pre class="literal-block">
+$ docker ps
+CONTAINER ID        IMAGE               COMMAND                CREATED
+STATUS              PORTS                    NAMES
+736b803a915e        postgres:9.3        &quot;/usr/lib/postgresql   26 seconds ago
+Up 25 seconds       0.0.0.0:5432-&gt;5432/tcp   fervent_mestorf
+$
+</pre>
+</div>
+<div class="section" id="id58">
+
+<p>or show all your containers:</p>
+<pre class="literal-block">
+$ docker ps -a
+CONTAINER ID        IMAGE                 COMMAND                …
+4383f9b8e748        postgres:9.3          &quot;psql -h pg_server p   …
+2621003bd7c1        postgres:9.3          &quot;/usr/lib/postgresql   …
+ce3b7bd4cc96        postgres:9.4          &quot;/usr/lib/postgresql   …
+82e1f606b3de        miniscule:latest      &quot;/true&quot;                …
+c4bbab6e79be        142bbf219697          &quot;/bin/sh -c 'apt-get   …
+f2956d7148a3        142bbf219697          &quot;/bin/sh -c 'apt-get   …
+db99ad5f6284        envirocert:latest     &quot;/home/docker/docker   …
+55ae9072bba4        nha:latest            &quot;/home/docker/docker   …
+0af6c9a90f48        postgres:9.3          &quot;/usr/lib/postgresql   …
+7dc4327efb80        elyase/pyrun:3.4      &quot;/bin/sh&quot;              …
+d2862f2aeca4        elyase/pyrun:3.4      &quot;/bin/sh&quot;              …
+5c4eb70b9d40        clarus_nginx:latest   &quot;nginx&quot;                …
+ba2c45b53412        nha:latest            &quot;/home/docker/docker   …
+9fa023adc171        nha:latest            &quot;/home/docker/docker   …
+75f7c4fd2a9c        nha:latest            &quot;/home/docker/docker   …
+64ac4fbc0ac1        postgres:9.3          &quot;/usr/lib/postgresql   …
+</pre>
+</div>
+<div class="section" id="id59">
+
+<p>Container management:</p>
+<pre class="literal-block">
+$ docker stop [-t x] &lt;CONTAINER&gt;
+$ docker restart [-t x] &lt;CONTAINER&gt;
+$ docker logs [-f] &lt;CONTAINER&gt;
+$ docker attach &lt;CONTAINER&gt;
+$ docker rm [-f] &lt;CONTAINER&gt;
+</pre>
+<p>Stop all running containers now:</p>
+<pre class="literal-block">
+$ docker stop -t 0 $(docker ps -q)
+</pre>
+</div>
+<div class="section" id="id60">
+
+<p><tt class="docutils literal">inspect</tt> provides a ton of information about containers</p>
+<p>Get a container’s IP address:</p>
+<pre class="literal-block">
+$ docker inspect -f '{{.NetworkSettings.IPAddress}}' pg_server
+172.17.0.11
+</pre>
+</div>
+<div class="section" id="id61">
+
+<p>Yay automation!</p>
+<pre class="literal-block">
+$ pgcli -h $(docker inspect -f '{{.NetworkSettings.IPAddress}}' pg_server) \
+&gt; postgres postgres
+Version: 0.16.1
+Chat: https://gitter.im/amjith/pgcli
+Mail: https://groups.google.com/forum/#!forum/pgcli
+Home: http://pgcli.com
+postgres&gt;
+</pre>
+</div>
+<div class="section" id="id62">
+
+<p>Links build little virtual network bridges between containers</p>
+</div>
+<div class="section" id="id63">
+
+<p>Run a PG server:</p>
+<pre class="literal-block">
+$ docker run -d --name pg_server postgres
+2621003bd7c1ef6cf167bae2c3ce981d696522b3016aa5af74f2e192598816e1
+</pre>
+<p>Run a second psql client container, linked to the first:</p>
+<pre class="literal-block">
+$ docker run -it --rm --link pg_server:pg_server postgres psql \
+&gt; -h pg_server postgres postgres
+psql (9.3.5)
+Type &quot;help&quot; for help.
+
+postgres=#
+</pre>
+</div>
+<div class="section" id="id64">
+
+<p>Image: a saved Docker application that can be used to create running containers</p>
+</div>
+<div class="section" id="id65">
+
+<p>Get them from the registry:</p>
+<pre class="literal-block">
+$ docker pull redis
+# … wait while redis downloads
+$ docker run --rm -it redis
+[1] 12 Mar 04:43:30.755 # Warning: no config file specified, using...
+                _._
+           _.-``__ ''-._
+      _.-``    `.  `_.  ''-._           Redis 2.8.19 (00000000/0) 64 bit
+  .-`` .-```.  ```\/    _.,_ ''-._
+ (    '      ,       .-`  | `,    )     Running in stand alone mode
+ |`-._`-...-` __...-.``-._|'` _.-'|     Port: 6379
+ |    `-._   `._    /     _.-'    |     PID: 1
+</pre>
+</div>
+<div class="section" id="id66">
+
+<p>or make your own!</p>
+<pre class="literal-block">
+$ cd miniscule
+$ ls -l
+total 36
+-rw-r----- 1 drocco drocco  46 Dec  4 16:39 Dockerfile
+-rw-r----- 1 drocco drocco  55 Dec  4 16:39 README
+-rwx------ 1 drocco drocco 125 Dec  4 16:40 true-asm
+$ cat Dockerfile
+FROM scratch
+ADD true-asm /true
+CMD [&quot;/true&quot;]
+</pre>
+</div>
+<div class="section" id="id67">
+
+<pre class="literal-block">
+$ docker build -t mini .
+Sending build context to Docker daemon 4.096 kB
+Sending build context to Docker daemon
+Step 0 : FROM scratch
+ ---&gt;
+Step 1 : ADD true-asm /true
+ ---&gt; 4a5924f63d2d
+Removing intermediate container 84292bb778e6
+Step 2 : CMD /true
+ ---&gt; Running in e2bb67e2042b
+ ---&gt; 17f92751929f
+Removing intermediate container e2bb67e2042b
+Successfully built 17f92751929f
+</pre>
+</div>
+<div class="section" id="id68">
+
+<dl class="docutils">
+<dt>(Super nerdy: this is [close to] the smallest possible executable</dt>
+<dd>Docker container at 125 <em>bytes</em>)</dd>
+</dl>
+<pre class="literal-block">
+$ docker images
+REPOSITORY  TAG     IMAGE ID      CREATED         VIRTUAL SIZE
+mini        latest  17f92751929f  3 minutes ago   125 B
+</pre>
+</div>
+<div class="section" id="id69">
+
+<p>My base Python image:</p>
+<pre class="literal-block">
+FROM ubuntu:trusty
+MAINTAINER drocco&#64;gmail.com
+
+# system packages
+RUN apt-get update
+RUN apt-get install -y python-pip python-dev libjpeg-dev libz-dev libpq-dev git
+RUN pip install --download-cache /tmp -U pip
+RUN pip install --download-cache /tmp -U setuptools virtualenv
+
+# allow PIL to find 64-bit libs
+RUN ln -s /usr/lib/x86_64-linux-gnu/libjpeg.so /usr/lib
+RUN ln -s /usr/lib/x86_64-linux-gnu/libz.so /usr/lib
+
+# without this cElementTree will not build on trusty
+RUN echo '#define HAVE_MEMMOVE 1' &gt;&gt; /usr/include/python2.7/pyconfig.h
+
+# add a docker user
+RUN adduser --gecos 'Normal Docker (non-root) user' --home /home/docker --disabled-password docker
+</pre>
+</div>
+<div class="section" id="id70">
+
+<p>Volume: container storage</p>
+</div>
+<div class="section" id="id71">
+
+<p>2 kinds of volumes:</p>
+<ul class="simple">
+<li>container-based</li>
+<li>host (shared file/folder)</li>
+</ul>
+</div>
+<div class="section" id="id72">
+
+<p>Volumes can be shared between multiple containers</p>
+</div>
+<div class="section" id="id73">
+
+<p>Docker is oriented toward self-sufficient containers…</p>
+</div>
+<div class="section" id="id74">
+
+<p>Building images using host-editable source installs is not really the
+“Docker way”</p>
+</div>
+<div class="section" id="id75">
+
+<p>Docker for Developers</p>
+</div>
+<div class="section" id="id76">
+
+<p>host volumes + scripts + docker commit == ♥</p>
+</div>
+<div class="section" id="id77">
+
+<p>Idea: use a script to install hosted, editable libraries</p>
+</div>
+<div class="section" id="id78">
+
+<p>docker commit → create an image from a container</p>
+</div>
+<div class="section" id="id79">
+
+<pre class="literal-block">
+clarus_base →   client 0
+                client 1
+                client 2
+</pre>
+</div>
+<div class="section" id="id80">
+
+<pre class="literal-block">
+for thing in dependencies;
+do
+    cd thing
+    python setup.py develop
+    cd -
+done
+</pre>
+</div>
+<div class="section" id="id81">
+
+<p>dockerkit contains examples of how to do it</p>
+<p><a class="reference external" href="https://github.com/drocco007/dockerkit">https://github.com/drocco007/dockerkit</a></p>
+<p>(Grab me later if you want to discuss the gory details :)</p>
+</div>
+<div class="section" id="id82">
+
+<p>Docker has approx. 6 zillion command line switches</p>
+</div>
+<div class="section" id="id83">
+
+<p>Use a script to keep your sanity</p>
+</div>
+<div class="section" id="id84">
+
+<p>app server:</p>
+<pre class="literal-block">
+case &quot;$COMMAND&quot; in
+    &#64;(bt|brighttrac|server) )
+
+        docker run -d \
+            -p 9085:9085 \
+            -v /home/drocco/source/brightlink:/brightlink_dev \
+            -u docker \
+            --link nha_db:dbhost \
+            --link nha_store:store.example.com \
+            --volumes-from vollog \
+            --name nha_server \
+            $IMAGE \
+            /home/docker/docker_env/bin/python …
+        ;;
+</pre>
+</div>
+<div class="section" id="id85">
+
+</div>
+<div class="section" id="virtualenv-is-dead-1">
+<h1>virtualenv is DEAD!!1</h1>
+</div>
+<div class="section" id="id86">
+
+<p>Uhm, no.</p>
+</div>
+<div class="section" id="id87">
+
+<pre class="literal-block">
+$ docker run --rm pybase pip list
+chardet (2.0.1)
+colorama (0.2.5)
+html5lib (0.999)
+pip (6.0.6)
+requests (2.2.1)
+setuptools (11.3.1)
+six (1.5.2)
+urllib3 (1.7.1)
+virtualenv (12.0.5)
+</pre>
+</div>
+<div class="section" id="id88">
+
+<p>virtualenv isolates you from <em>vendor dependencies</em></p>
+</div>
+<div class="section" id="id89">
+
+<p>virtualenv enables <em>non-root container processes</em></p>
+</div>
+<div class="section" id="id90">
+
+<p>Docker</p>
+<ul class="simple">
+<li>easy, fast way to set up isolated, virtual application clusters</li>
+<li>bend the rules to allow host editing of container files</li>
+<li>use scripts to automate container startup and linking</li>
+<li>use virtualenv, because virtualenv rocks</li>
+</ul>
+</div>
+<div class="section" id="id91">
+
+<p>Thank you!</p>
+</div>
+<div class="section" id="id92">
+
+<p>♥</p>
+<p>&#64;drocco007</p>
+<!-- single quote: ’
+double quotes: x“”x
+em-dash: —
+vertical ellipsis: ⋮
+arrows: ←, ↑, →, ↓, ↔, ↕, ↖, ↗, ↘, ↙ -->
+<script>
+    window.slide_transition_time = 200;
+</script>
+<script src="static/jquery-1.6.2.min.js"></script>
+<script src="static/jquery.url.min.js"></script>
+<script src="static/slides2.js"></script></div>
+</div>
+</body>
+</html>
